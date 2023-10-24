@@ -1,5 +1,6 @@
 package com.claudiusava.WellFB.service;
 
+import com.claudiusava.WellFB.model.Role;
 import com.claudiusava.WellFB.model.User;
 import com.claudiusava.WellFB.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,17 @@ public class UserDetail implements UserDetailsService {
 
         User user = userOptional.get();
 
+        String userRole =  null;
+
+        for(Role role: user.getRoles()){
+            userRole = role.getName().replace("ROLE_","");
+        }
+
 
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .roles("USER") // Define the user's roles/authorities here
+                .roles(userRole) // Define the user's roles/authorities here
                 .build();
 
     }
