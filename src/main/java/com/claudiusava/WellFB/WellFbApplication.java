@@ -14,12 +14,5 @@ public class WellFbApplication {
 		SpringApplication.run(WellFbApplication.class, args);
 	}
 
-	@Bean
-	public CommandLineRunner demo(RoleRepository roleRepo) {
-		return (args) -> {
-			Role role = new Role();
-			role.setName("ROLE_ADMIN");
-			roleRepo.save(role);
-		};
-	}
+	
 }
