@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,6 +24,9 @@ public class Post {
 
     @Column(nullable = false)
     private Integer likes;
+
+    @OneToOne
+    private Upload uploadFile;
 
 
 }

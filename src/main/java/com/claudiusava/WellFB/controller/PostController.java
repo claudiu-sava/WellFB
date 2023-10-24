@@ -1,17 +1,21 @@
 package com.claudiusava.WellFB.controller;
 
 import com.claudiusava.WellFB.model.Post;
+import com.claudiusava.WellFB.model.Upload;
 import com.claudiusava.WellFB.model.User;
 import com.claudiusava.WellFB.repository.PostRepository;
+import com.claudiusava.WellFB.repository.UploadRepository;
 import com.claudiusava.WellFB.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -19,10 +23,15 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/post")
 public class PostController {
+    public static final String UPLOAD_BASE = "/src/main/resources/uploads";
+    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + UPLOAD_BASE;
+
     @Autowired
     private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UploadRepository uploadRepository;
 
     @GetMapping("/new")
     private String newPostPage(Model model){
@@ -34,11 +43,22 @@ public class PostController {
 
     @PostMapping("/new")
     private String newPost(Model model,
-                           @ModelAttribute Post post){
+                           @ModelAttribute Post post,
+                           @RequestParam("upload") MultipartFile upload) throws IOException {
+
+        StringBuilder fileNames = new StringBuilder();
+        Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, upload.getOriginalFilename());
+        fileNames.append(upload.getOriginalFilename());
+        Files.write(fileNameAndPath, upload.getBytes());
+
+        Upload uploadToDb = new Upload();
+        uploadToDb.setFileName(UPLOAD_BASE + "/" + fileNames);
+        uploadRepository.save(uploadToDb);
 
         Post postToDb = new Post();
         postToDb.setLikes(0);
         postToDb.setDescription(post.getDescription());
+        postToDb.setUploadFile(uploadToDb);
 
         User user = userRepository.findByUsername(User.getLoggedUsername()).get();
         List<Post> userPost = user.getPosts();

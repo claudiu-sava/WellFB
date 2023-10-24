@@ -5,9 +5,10 @@
     <div th:replace="~{/fragments/navbar :: header}"></div>
     <div th:replace="~{/fragments/head :: head}"></div>
 
-    <form method="post" th:action="@{/post/new}">
+    <form method="post" th:action="@{/post/new}" enctype="multipart/form-data">
 
         <div class="form-group">
+            <input type="file" name="upload" accept="image/*" class="form-control-file">
             <label for="description">Description</label>
             <input type="text" class="form-control" id="description" name="description" placeholder="Description">
         </div>
