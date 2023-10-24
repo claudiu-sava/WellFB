@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <body>
+    <div th:replace="~{/fragments/navbar :: header}"></div>
+    <div th:replace="~{/fragments/head :: head}"></div>
+
+    <form method="post" th:action="@{/post/new}">
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" class="form-control" id="description" name="description" placeholder="Description">
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-1">Create Post</button>
+    </form>
+
+    </body>
+</html>

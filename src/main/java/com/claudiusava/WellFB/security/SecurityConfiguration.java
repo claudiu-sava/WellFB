@@ -23,10 +23,21 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SecurityConfiguration{
 
+    private static final String[] user_auth = {
+            "/",
+            "/post/**",
+            "/user/**"
+    };
+
+    private static final String[] anon_auth = {
+            "/newUser"
+    };
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
-                        .requestMatchers("/", "/new").permitAll()
+                        .requestMatchers(user_auth).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(anon_auth).permitAll()
                 .anyRequest().authenticated())
 
                 .formLogin(login -> login

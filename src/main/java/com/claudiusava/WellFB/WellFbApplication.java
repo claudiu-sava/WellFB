@@ -14,5 +14,5 @@ public class WellFbApplication {
 		SpringApplication.run(WellFbApplication.class, args);
 	}
 
-	
+
 }
