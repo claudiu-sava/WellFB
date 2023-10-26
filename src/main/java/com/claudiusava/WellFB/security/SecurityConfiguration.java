@@ -26,11 +26,12 @@ public class SecurityConfiguration{
     private static final String[] user_auth = {
             "/",
             "/post/**",
-            "/user/**"
+            "/user/**",
+            "/resources/uploads/**"
     };
 
     private static final String[] anon_auth = {
-            "/newUser"
+            "/new"
     };
 
     @Bean
@@ -41,6 +42,7 @@ public class SecurityConfiguration{
                 .anyRequest().authenticated())
 
                 .formLogin(login -> login
+                        .loginPage("/login")
                         .permitAll()
                         .defaultSuccessUrl("/"))
 
