@@ -40,32 +40,20 @@ public class IndexController {
         return "index";
     }
 
-    @GetMapping("/admin")
-    private String test2(){
-        return "ADMIN";
-    }
-
-    @GetMapping("/new")
-    private String ShowNew(){
-        return "signup";
-    }
 
     @PostMapping("/new")
     private String newUser(@ModelAttribute User user){
 
-        User user1 = new User();
-        user1.setUsername(user.getUsername());
-        user1.setPassword(passwordEncoder().encode(user.getPassword()));
+        User userToDb = new User();
+        userToDb.setUsername(user.getUsername());
+        userToDb.setPassword(passwordEncoder().encode(user.getPassword()));
 
-        Role roles = roleRepository.findByName("ROLE_ADMIN").get();
-        user1.setRoles(Collections.singleton(roles));
+        Role roles = roleRepository.findByName("ROLE_USER").get();
+        userToDb.setRoles(Collections.singleton(roles));
 
-        user1.setPosts(null);
+        userToDb.setPosts(null);
 
-        userRepository.save(user1);
-
-        System.out.println("USER SAVED");
-
+        userRepository.save(userToDb);
 
         return "redirect:/";
     }
