@@ -28,5 +28,8 @@ public class Post {
     @OneToOne
     private Upload uploadFile;
 
+    @ManyToOne
+    private User user;
+
 
 }

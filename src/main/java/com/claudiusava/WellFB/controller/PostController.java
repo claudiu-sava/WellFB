@@ -16,15 +16,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/post")
 public class PostController {
-    public static final String UPLOAD_BASE = "/src/main/resources/uploads";
-    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + UPLOAD_BASE;
+    public static final String UPLOAD_BASE = "/uploads";
+    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/src/main/resources/static" + UPLOAD_BASE;
 
     @Autowired
     private PostRepository postRepository;
@@ -62,7 +60,9 @@ public class PostController {
 
         User user = userRepository.findByUsername(User.getLoggedUsername()).get();
         List<Post> userPost = user.getPosts();
+        postToDb.setUser(user);
         userPost.add(postToDb);
+
 
         postRepository.save(postToDb);
         userRepository.save(user);
