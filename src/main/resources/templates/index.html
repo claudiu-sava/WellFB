@@ -4,31 +4,55 @@
 <div th:replace="~{/fragments/navbar :: header}"></div>
 <div th:replace="~{/fragments/head :: head}"></div>
 
-<div class="container">
-    <div class="row align-items-center">
-        <div class="col text-center">
-
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-9 text-center" style="background-color: red;">
+            <!-- Left column content -->
+            <h2>Column 1</h2>
+            <p>This is the content for column 1.</p>
 
             <table class="table">
 
-                <thead>
-                    <tr>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-
                 <tbody>
-                    <tr th:each="review:${reviewList}">
-                        <td th:text="${review.name}"></td>
-                    </tr>
+                <tr th:each="post:${allPosts}">
+                    <td>
+
+                        <h2 class="my-3" th:text="${post.getUser().getUsername()}"></h2>
+                        <img th:src="${post.getUploadFile().getFileName()}" alt="image" class="img-fluid">
+                        <blockquote class="text-break my-2" th:text="${post.getDescription()}"></blockquote>
+                        <div role="group">
+                            <img th:src="@{/drawable/like_icon_50.png}" alt="like">
+                            <p class="mr-3 align-middle"><span th:text="${post.getLikes()}"></span> persons liked that</p>
+                        </div>
+
+                    </td>
+                </tr>
                 </tbody>
 
             </table>
-
-
         </div>
-        <div class="col text-start">
-            One of three columns
+        <div class="col-md-3" style="background-color: blue;">
+            <!-- Right column content -->
+            <h2>Column 2</h2>
+            <p>This is the content for column 2.</p>
+
+            <h2>You might know them</h2>
+            <table class="table">
+
+                <tbody>
+                <tr th:each="user:${allUsers}">
+                    <td>
+
+                        <div class="btn-group" role="group">
+                            <img th:src="@{/drawable/user_icon_50.png}" alt="user" class="ml-3">
+                            <p th:text="${user.getUsername()}"></p>
+                        </div>
+
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
         </div>
     </div>
 </div>
