@@ -31,7 +31,7 @@ public class SecurityConfiguration{
     };
 
     private static final String[] anon_auth = {
-            "/new"
+            "/users/new"
     };
 
     @Bean
@@ -42,9 +42,10 @@ public class SecurityConfiguration{
                 .anyRequest().authenticated())
 
                 .formLogin(login -> login
-                        .loginPage("/login")
                         .permitAll()
-                        .defaultSuccessUrl("/"))
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/", true))
 
                 .logout(logout -> logout.permitAll())
 
