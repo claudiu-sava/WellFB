@@ -1,0 +1,9 @@
+img {
+    max-width: 600px; /* Set your desired maximum width */
+    max-height: 450px; /* Set your desired maximum height */
+}
+
+table {
+    border: none; /* Remove table borders */
+    border-collapse: collapse; /* Remove cell spacing */
+}
