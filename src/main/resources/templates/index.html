@@ -6,7 +6,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-9 text-center" style="background-color: red;">
+        <div class="col-md-9 text-center">
             <!-- Left column content -->
             <h2>Column 1</h2>
             <p>This is the content for column 1.</p>
@@ -18,7 +18,7 @@
                     <td>
 
                         <h2 class="my-3" th:text="${post.getUser().getUsername()}"></h2>
-                        <img th:src="${post.getUploadFile().getFileName()}" alt="image" class="img-fluid">
+                        <img th:src="@{${post.getUploadFile().getFileName()}}" alt="image" class="img-fluid">
                         <blockquote class="text-break my-2" th:text="${post.getDescription()}"></blockquote>
                         <div role="group">
                             <img th:src="@{/drawable/like_icon_50.png}" alt="like">
@@ -31,7 +31,7 @@
 
             </table>
         </div>
-        <div class="col-md-3" style="background-color: blue;">
+        <div class="col-md-3">
             <!-- Right column content -->
             <h2>Column 2</h2>
             <p>This is the content for column 2.</p>
