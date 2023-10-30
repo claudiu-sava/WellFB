@@ -1,17 +1,19 @@
 package com.claudiusava.WellFB.controller;
 
+import com.claudiusava.WellFB.model.Post;
 import com.claudiusava.WellFB.model.Role;
 import com.claudiusava.WellFB.model.User;
+import com.claudiusava.WellFB.repository.PostRepository;
 import com.claudiusava.WellFB.repository.RoleRepository;
 import com.claudiusava.WellFB.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static com.claudiusava.WellFB.security.SecurityConfiguration.passwordEncoder;
 
@@ -23,12 +25,8 @@ public class UserController {
     private RoleRepository roleRepository;
     @Autowired
     private UserRepository userRepository;
-
-
-    @GetMapping("/new")
-    private String ShowNew(){
-        return "signup";
-    }
+    @Autowired
+    private PostRepository postRepository;
 
 
     @PostMapping("/new")
@@ -47,5 +45,37 @@ public class UserController {
 
         return "redirect:/login";
     }
+
+    @GetMapping("/")
+    private String getUserPage(@RequestParam(value = "username", required = false) String username,
+                               RedirectAttributes redirectAttributes,
+                               Model model){
+
+
+        if(username == null){
+            String usernameReplace = User.getLoggedUsername();
+            redirectAttributes.addAttribute("username", usernameReplace);
+            return "redirect:/users/";
+        }
+
+
+        Optional<User> userOptional = userRepository.findByUsername(username);
+
+        if(userOptional.isEmpty()){
+            return "redirect:/error";
+        }
+
+        User user = userOptional.get();
+
+
+        Iterable<Post> postsByUser = postRepository.findAllByUser(user);
+
+        model.addAttribute("allPostsByUser", postsByUser);
+        model.addAttribute("username", username);
+        model.addAttribute("title", username);
+        return "user";
+    }
+
+
 
 }
