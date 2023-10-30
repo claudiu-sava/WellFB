@@ -24,4 +24,4 @@ hs_err_pid*
 replay_pid*
 
 target/**
-/src/main/resources/static/uploads/
+src/main/resources/uploads
