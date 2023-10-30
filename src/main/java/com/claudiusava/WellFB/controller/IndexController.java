@@ -12,9 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import java.util.Collections;
 
+import static com.claudiusava.WellFB.WellFbApplication.UPLOAD_DIRECTORY;
 import static com.claudiusava.WellFB.security.SecurityConfiguration.passwordEncoder;
 
 @Controller
@@ -23,8 +25,7 @@ public class IndexController {
     private UserRepository userRepository;
     @Autowired
     private PostRepository postRepository;
-    @Autowired
-    private RoleRepository roleRepository;
+
 
     @GetMapping("/")
     private String showIndexPage(Model model){
@@ -38,24 +39,6 @@ public class IndexController {
         model.addAttribute("title", "WellFB");
 
         return "index";
-    }
-
-
-    @PostMapping("/new")
-    private String newUser(@ModelAttribute User user){
-
-        User userToDb = new User();
-        userToDb.setUsername(user.getUsername());
-        userToDb.setPassword(passwordEncoder().encode(user.getPassword()));
-
-        Role roles = roleRepository.findByName("ROLE_USER").get();
-        userToDb.setRoles(Collections.singleton(roles));
-
-        userToDb.setPosts(null);
-
-        userRepository.save(userToDb);
-
-        return "redirect:/";
     }
 
 }
