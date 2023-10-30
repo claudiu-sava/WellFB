@@ -6,6 +6,7 @@ import com.claudiusava.WellFB.model.User;
 import com.claudiusava.WellFB.repository.PostRepository;
 import com.claudiusava.WellFB.repository.RoleRepository;
 import com.claudiusava.WellFB.repository.UserRepository;
+import com.claudiusava.WellFB.service.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +38,7 @@ public class IndexController {
         model.addAttribute("allUsers", allUsers);
 
         model.addAttribute("title", "WellFB");
+        model.addAttribute("loggedUser", User.getLoggedUsername());
 
         return "index";
     }
