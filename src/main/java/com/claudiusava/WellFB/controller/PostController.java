@@ -18,11 +18,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static com.claudiusava.WellFB.WellFbApplication.UPLOAD_BASE;
+import static com.claudiusava.WellFB.WellFbApplication.UPLOAD_DIRECTORY;
+
 @Controller
 @RequestMapping("/post")
 public class PostController {
-    public static final String UPLOAD_BASE = "/uploads";
-    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/src/main/resources/static" + UPLOAD_BASE;
+
 
     @Autowired
     private PostRepository postRepository;
@@ -50,7 +52,8 @@ public class PostController {
         Files.write(fileNameAndPath, upload.getBytes());
 
         Upload uploadToDb = new Upload();
-        uploadToDb.setFileName(UPLOAD_BASE + "/" + fileNames);
+        uploadToDb.setFileName(UPLOAD_BASE + fileNames);
+
         uploadRepository.save(uploadToDb);
 
         Post postToDb = new Post();
