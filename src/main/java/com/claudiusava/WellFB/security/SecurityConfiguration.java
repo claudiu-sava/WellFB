@@ -40,7 +40,10 @@ public class SecurityConfiguration{
 
                 .logout(logout -> logout.permitAll())
 
-                .csrf(csrf -> csrf.disable());
+                .csrf(csrf -> csrf.disable())
+
+                .headers(header -> header.frameOptions( h-> h.disable()));
+
 
         return http.build();
     }
