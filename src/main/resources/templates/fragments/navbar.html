@@ -6,21 +6,27 @@
 <header>
 
     <nav class="navbar navbar-light bg-light justify-content-between">
-        <a class="navbar-brand">WellFB</a>
+        <a class="navbar-brand" th:href="@{/}">WellFB</a>
 
-        <form class="form-inline">
-            <button type="button" class="btn btn-outline-primary mr-5">Primary</button>
 
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+
+        <form class="form-inline" method="get" th:action="@{/users/}">
+            <a th:href="@{/post/new}">
+                <button type="button" class="btn btn-outline-primary mr-3">New Post</button>
+            </a>
+
+            <input class="form-control mr-sm-2" type="search" name="username" placeholder="Search for User" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 
-            <div>
+            <div class="ml-5">
                 <a th:href="@{/users/}">
-                    <img th:src="@{/drawable/user_icon_50.png}" alt="user" class="ml-3" >
+                    <img th:src="@{/drawable/user_icon_50.png}" alt="user">
                 </a>
             </div>
 
         </form>
+
+
     </nav>
 
 </header>
