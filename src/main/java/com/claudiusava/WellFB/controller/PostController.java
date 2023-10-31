@@ -1,5 +1,6 @@
 package com.claudiusava.WellFB.controller;
 
+import com.claudiusava.WellFB.dto.LikeDto;
 import com.claudiusava.WellFB.model.Post;
 import com.claudiusava.WellFB.model.Upload;
 import com.claudiusava.WellFB.model.User;
@@ -9,6 +10,7 @@ import com.claudiusava.WellFB.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,7 +59,7 @@ public class PostController {
         uploadRepository.save(uploadToDb);
 
         Post postToDb = new Post();
-        postToDb.setLikes(0);
+        postToDb.setLikedBy(null);
         postToDb.setDescription(post.getDescription());
         postToDb.setUploadFile(uploadToDb);
 
@@ -71,6 +73,34 @@ public class PostController {
         userRepository.save(user);
 
         return "redirect:/";
+    }
+
+    @PostMapping("/like")
+    @ResponseBody
+    public LikeDto likePost(@RequestParam("id") Integer postId) {
+
+        Post post = postRepository.findById(postId).get();
+        User user = userRepository.findByUsername(User.getLoggedUsername()).get();
+        List<User> postLikedBy = post.getLikedBy();
+
+        boolean liked = false;
+
+        if(postLikedBy.contains(user)){
+            postLikedBy.remove(user);
+
+        } else {
+            postLikedBy.add(user);
+            liked = true;
+        }
+
+        post.setLikedBy(postLikedBy);
+        postRepository.save(post);
+
+        if (liked){
+            return new LikeDto(true, postLikedBy.size());
+        }
+
+        return new LikeDto(false, postLikedBy.size());
     }
 
 }

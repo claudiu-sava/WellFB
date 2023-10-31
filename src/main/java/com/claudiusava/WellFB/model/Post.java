@@ -22,8 +22,8 @@ public class Post {
     @Column(nullable = false)
     private String date = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
 
-    @Column(nullable = false)
-    private Integer likes;
+    @ManyToMany
+    private List<User> likedBy;
 
     @OneToOne
     private Upload uploadFile;

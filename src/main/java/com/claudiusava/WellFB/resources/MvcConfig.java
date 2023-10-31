@@ -13,8 +13,8 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/uploads/**", "/drawable/**", "/css/**")
-                .addResourceLocations("file:" + UPLOAD_DIRECTORY, "file:" + DRAWABLE_RESOURCES, "file:" + CSS_RESOURCES)
+        registry.addResourceHandler("/uploads/**", "/drawable/**", "/css/**", "/js/**")
+                .addResourceLocations("file:" + UPLOAD_DIRECTORY, "file:" + DRAWABLE_RESOURCES, "file:" + CSS_RESOURCES, "file:" + JS_RESOURCES)
                 .setCachePeriod(0)
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());

@@ -25,12 +25,20 @@
                         <blockquote class="text-break my-2" th:text="${post.getDescription()}"></blockquote>
                         <div role="group">
                             <div class="btn-group" role="group">
-                                <img th:src="@{/drawable/like_icon_50.png}" alt="like">
+
+                                <button type="submit" onclick="update(this.id)" th:id="'likeButton_' + ${post.getId().toString()}" class="btn btn-link">
+                                    <div id="buttons">
+                                        <img th:if="${post.getLikedBy().contains(user)}" th:src="@{/drawable/like_icon_red_50.png}" alt="like" th:id="'likeImage_' + ${post.getId().toString()}">
+                                        <img th:unless="${post.getLikedBy().contains(user)}" th:src="@{/drawable/like_icon_50.png}" alt="like" th:id="'likeImage_' + ${post.getId().toString()}">
+                                    </div>
+                                </button>
+
+
                                 <img th:if="${post.getUser().getUsername().equals(loggedUser)}" th:src="@{/drawable/edit_icon_50.png}" alt="edit">
                                 <img th:if="${post.getUser().getUsername().equals(loggedUser)}" th:src="@{/drawable/remove_icon_50.png}" alt="remove post">
                             </div>
 
-                            <p class="mr-3 align-middle mt-1"><span th:text="${post.getLikes()}"></span> persons liked that</p>
+                            <p class="mr-3 align-middle mt-1"><span th:id="'likeCount_' + ${post.getId().toString()}" th:text="${post.getLikedBy().size()}"></span> persons liked that</p>
                         </div>
 
                     </td>
