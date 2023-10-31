@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 import static com.claudiusava.WellFB.WellFbApplication.UPLOAD_DIRECTORY;
 import static com.claudiusava.WellFB.security.SecurityConfiguration.passwordEncoder;
@@ -29,16 +31,23 @@ public class IndexController {
     @GetMapping("/")
     private String showIndexPage(Model model){
 
+        User loggedUser = userRepository.findByUsername(User.getLoggedUsername()).get();
+
         Iterable<Post> allPosts = postRepository.findAll();
         Iterable<User> allUsers = userRepository.findFirst10By();
-        User loggedUser = userRepository.findByUsername(User.getLoggedUsername()).get();
+
+        Iterator<User> iterator = allUsers.iterator();
+        while (iterator.hasNext()){
+            if(iterator.next().equals(loggedUser)){
+                iterator.remove();
+            }
+        }
+
+        model.addAttribute("title", "WellFB");
+        model.addAttribute("loggedUser", loggedUser);
 
         model.addAttribute("allPosts", allPosts);
         model.addAttribute("allUsers", allUsers);
-
-        model.addAttribute("title", "WellFB");
-        model.addAttribute("loggedUser", User.getLoggedUsername());
-        model.addAttribute("user", loggedUser);
 
         return "index";
     }
