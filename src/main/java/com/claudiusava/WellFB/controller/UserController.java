@@ -66,6 +66,7 @@ public class UserController {
         }
 
         User user = userOptional.get();
+        User loggedUser = userRepository.findByUsername(User.getLoggedUsername()).get();
 
 
         Iterable<Post> postsByUser = postRepository.findAllByUser(user);
@@ -73,6 +74,7 @@ public class UserController {
         model.addAttribute("allPostsByUser", postsByUser);
         model.addAttribute("username", username);
         model.addAttribute("title", username);
+        model.addAttribute("loggedUser", loggedUser);
         return "user";
     }
 

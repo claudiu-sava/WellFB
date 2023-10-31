@@ -12,7 +12,7 @@
             <img th:src="@{/drawable/user_icon_100.png}" alt="Your Image">
         </div>
         <div class="ml-3">
-            <h2 th:text="${username}"></h2>
+            <h2 th:text="${loggedUser.getUsername()}"></h2>
         </div>
     </div>
 </div>
@@ -38,6 +38,32 @@
 
             <div th:each="post, iterStat : ${allPostsByUser}" style="width:100%;" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
                 <img th:src="@{${post.getUploadFile().getFileName()}}" alt="Image" class="img-fluid vh-100">
+                <div class="carousel-caption d-none d-md-block">
+
+                    <h5 th:text="${post.getDescription()}"></h5>
+
+                    <div role="group">
+                        <div class="btn-group" role="group">
+
+                            <button type="button" onclick="update(this.id)" th:id="'likeButton_' + ${post.getId().toString()}" class="btn btn-link">
+                                <img th:if="${post.getLikedBy().contains(loggedUser)}" th:src="@{/drawable/like_icon_red_50.png}" alt="like" th:id="'likeImage_' + ${post.getId().toString()}">
+                                <img th:unless="${post.getLikedBy().contains(loggedUser)}" th:src="@{/drawable/like_icon_50.png}" alt="like" th:id="'likeImage_' + ${post.getId().toString()}">
+                            </button>
+
+                            <button th:if="${post.getUser().getUsername().equals(loggedUser.getUsername())}" type="button" th:id="'editButton_' + ${post.getId().toString()}" class="btn btn-link">
+                                <img  th:src="@{/drawable/edit_icon_50.png}" alt="edit">
+                            </button>
+
+                            <button th:if="${post.getUser().getUsername().equals(loggedUser.getUsername())}" type="button" th:id="'deleteButton_' + ${post.getId().toString()}" class="btn btn-link">
+                                <img th:src="@{/drawable/remove_icon_50.png}" alt="remove post">
+                            </button>
+                        </div>
+
+                        <p class="mr-3 align-middle mt-1"><span th:id="'likeCount_' + ${post.getId().toString()}" th:text="${post.getLikedBy().size()}"></span> persons liked that</p>
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
