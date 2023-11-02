@@ -1,13 +1,19 @@
-function update1() {
-    $.post("/post/like").done(function (fragment) {
-        console.log(fragment);
-        $("#buttons").replaceWith(fragment);
-    });
+function deletePost(id){
+    fetch('/post/delete' + "?id=" + id, {
+        method: 'POST',
+    })
+        .then(response => response.text())
+        .then(data => {
+            console.log(data)
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
 
 function update(id){
-    String
     var postId = id.replace("likeButton_", "");
 
      console.log(postId)
@@ -28,5 +34,15 @@ function update(id){
         .catch(error => {
             console.error('Error:', error);
         });
-
 }
+
+//triggered when modal is about to be shown
+
+$( document ).ready(function() {
+    $('#postDeleteModal').on('show.bs.modal', function (e) {
+        //get data-id attribute of the clicked element
+        var postId = $(e.relatedTarget).data('post-id');
+
+        $("#postDeleteModalDeleteButton").attr("id", postId);
+    });
+});
