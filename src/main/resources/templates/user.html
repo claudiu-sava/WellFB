@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div th:replace="~{/fragments/navbar :: header}"></div>
+<div th:replace="~{/fragments/head :: head}"></div>
+<div th:insert="~{/fragments/postDeleteModal :: modal}"></div>
+
+
+
+<div class="container-fluid ">
+    <div class="d-flex align-items-center">
+        <div>
+            <img th:src="@{/drawable/user_icon_100.png}" alt="Your Image">
+        </div>
+        <div class="ml-3">
+            <h2 th:text="${loggedUser.getUsername()}"></h2>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="btn-group" role="group">
+    <button type="button" class="btn btn-primary mx-1">Follow</button>
+    <button type="button" class="btn btn-primary mx-1">Message</button>
+</div>
+
+<h3 class="mt-5">Posts</h3>
+
+
+
+<div class="container mt-5">
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li th:each="post, iterStat : ${allPostsByUser}" th:attr="data-target='#myCarousel', data-slide-to=${iterStat.index}" th:class="${iterStat.index == 0} ? 'active' : ''"></li>
+        </ol>
+
+        <!-- Slides -->
+        <div class="carousel-inner">
+
+            <div th:each="post, iterStat : ${allPostsByUser}" style="width:100%;" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                <img th:src="@{${post.getUploadFile().getFileName()}}" alt="Image" class="img-fluid vh-100">
+                <div class="carousel-caption d-none d-md-block">
+
+                    <h5 th:text="${post.getDescription()}"></h5>
+
+                    <div th:insert="~{/fragments/postButtons :: postButtons}"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Controls -->
+        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,8 +20,18 @@ public class User {
     private String username;
     @Column(nullable = false)
     private String password;
+
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     private Set<Role> roles;
+
+    @OneToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Post> posts;
+
+
+    public static String getLoggedUsername(){
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 
 }

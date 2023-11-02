@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div th:replace="~{/fragments/navbar :: header}"></div>
+<div th:replace="~{/fragments/head :: head}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 text-center border-right">
+            <!-- Left column content -->
+            <h2>Create Account</h2>
+            <p>This is the content for column 1.</p>
+
+            <form method="post" th:action="@{/users/new}">
+
+                <div class="mb-3">
+                    <label for="username" class="form-label">Email address</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username" width="200px">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" aria-describedby="passwordHelpBlock" placeholder="Password">
+                    <div id="passwordHelpBlock" class="form-text">
+                        Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                    </div>
+
+                </div>
+
+                <button class="btn btn-outline-secondary" type="submit">Sign-Up</button>
+
+            </form>
+
+
+
+        </div>
+        <div class="col-md-4">
+            <!-- Right column content -->
+            <h2>Login</h2>
+            <p>This is the content for column 2.</p>
+
+            <form method="post" th:action="@{/login}">
+
+                <div class="mb-3">
+                    <label for="usernameLogin" class="form-label">Email address</label>
+                    <input type="text" class="form-control" id="usernameLogin" name="username" placeholder="Username">
+                    <label for="passwordLogin" class="form-label">Password</label>
+                    <input type="password" id="passwordLogin" name="password" class="form-control" placeholder="Password">
+
+                </div>
+
+                <button class="btn btn-outline-secondary" type="submit">Login</button>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="position-fixed fixed-bottom fixed-right m-3 alert alert-warning" th:if="${param.error}" role="alert">
+    Invalid credentials. Please try again.
+</div>
+
+</body>
+</html>
