@@ -10,7 +10,6 @@ import com.claudiusava.WellFB.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,13 +47,13 @@ public class PostController {
                            @ModelAttribute Post post,
                            @RequestParam("upload") MultipartFile upload) throws IOException {
 
-        StringBuilder fileNames = new StringBuilder();
+        StringBuilder fileName = new StringBuilder();
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, upload.getOriginalFilename());
-        fileNames.append(upload.getOriginalFilename());
+        fileName.append(upload.getOriginalFilename());
         Files.write(fileNameAndPath, upload.getBytes());
 
         Upload uploadToDb = new Upload();
-        uploadToDb.setFileName(UPLOAD_BASE + fileNames);
+        uploadToDb.setFileName(UPLOAD_BASE + fileName);
 
         uploadRepository.save(uploadToDb);
 
@@ -101,6 +100,25 @@ public class PostController {
         }
 
         return new LikeDto(false, postLikedBy.size());
+    }
+
+    @PostMapping("/delete")
+    private String deletePost(@RequestParam("id") Integer postId){
+
+        Post postToDelete = postRepository.findById(postId).get();
+        User user = userRepository.findById(postToDelete.getUser().getId()).get();
+        Upload upload = uploadRepository.findById(postToDelete.getUploadFile().getId()).get();
+
+        List<Post> allUserPosts = user.getPosts();
+        allUserPosts.remove(postToDelete);
+        user.setPosts(allUserPosts);
+
+        userRepository.save(user);
+        postRepository.delete(postToDelete);
+        uploadRepository.delete(upload);
+        System.out.println("Post deleted");
+        
+        return "redirect:/";
     }
 
 }
