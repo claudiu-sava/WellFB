@@ -38,11 +38,36 @@ function update(id){
 
 //triggered when modal is about to be shown
 
+function editPost(id, desc){
+    fetch('/post/edit' + "?id=" + id + "&desc=" + desc, {
+        method: 'POST',
+    })
+        .then(response => response.text())
+        .then(data => {
+            console.log(data)
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+}
+
 $( document ).ready(function() {
     $('#postDeleteModal').on('show.bs.modal', function (e) {
         //get data-id attribute of the clicked element
         var postId = $(e.relatedTarget).data('post-id');
 
         $("#postDeleteModalDeleteButton").attr("id", postId);
+    });
+
+    $('#postEditModal').on('show.bs.modal', function (e) {
+        //get data-id attribute of the clicked element
+        var postId = $(e.relatedTarget).data('post-id');
+        var postDesc = $(e.relatedTarget).data('post-desc');
+
+        $("#postEditModalPostDesc").val(postDesc);
+        $("#postEditModalHiddenInput").val(postId);
+        $("#postEditModalEditButton").attr("id", postId);
     });
 });
