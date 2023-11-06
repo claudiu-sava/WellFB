@@ -1,4 +1,9 @@
-
+.profile-pic-icon {
+    border-radius: 50%;
+    object-fit: fill;
+    max-width: 50px;
+    max-height: 50px;
+}
 
 table {
     border: none; /* Remove table borders */
