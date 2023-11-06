@@ -19,10 +19,25 @@
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 
             <div class="ml-5">
-                <a th:href="@{/users/}">
-                    <img th:src="@{/drawable/user_icon_50.png}" alt="user">
-                </a>
+
+                <div class="btn-group">
+                    <a th:href="@{/users/}">
+                        <img th:src="@{/drawable/user_icon_50.png}" alt="user">
+                    </a>
+
+                    <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img th:src="@{/drawable/dropdown_icon_15.png}" alt="user">
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" th:href="@{/users/}">About you</a>
+                        <a class="dropdown-item" href="#">Edit Account</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" th:href="@{/logout}">Logout</a>
+                    </div>
+                </div>
             </div>
+
 
         </form>
 
