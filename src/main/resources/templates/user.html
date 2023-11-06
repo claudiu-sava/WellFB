@@ -42,7 +42,7 @@
                 <img th:src="@{${post.getUploadFile().getFileName()}}" alt="Image" class="img-fluid vh-100">
                 <div class="carousel-caption d-none d-md-block">
 
-                    <h5 th:text="${post.getDescription()}"></h5>
+                    <h5 th:id="'postDesc_' + ${post.getId().toString()}" th:text="${post.getDescription()}"></h5>
 
                     <div th:insert="~{/fragments/postButtons :: postButtons}"></div>
 

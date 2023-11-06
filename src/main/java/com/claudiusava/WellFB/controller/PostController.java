@@ -123,10 +123,8 @@ public class PostController {
     }
 
     @PostMapping("/edit")
-    private String editPost(@ModelAttribute PostEditDto postEditDto){
-
-        System.out.println(postEditDto.getId());
-        System.out.println(postEditDto.getDesc());
+    @ResponseBody
+    private PostEditDto editPost(@ModelAttribute PostEditDto postEditDto){
 
         Post postToEdit = postRepository.findById(postEditDto.getId()).get();
 
@@ -139,7 +137,7 @@ public class PostController {
 
         postRepository.save(postToEdit);
 
-        return "redirect:/";
+        return postEditDto;
     }
 
 }

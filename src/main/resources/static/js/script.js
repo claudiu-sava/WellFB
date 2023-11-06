@@ -44,8 +44,8 @@ function editPost(id, desc){
     })
         .then(response => response.text())
         .then(data => {
-            console.log(data)
-            location.reload();
+            var response2 = JSON.parse(data);
+            $("#postDesc_" + id).text(response2.desc);
         })
         .catch(error => {
             console.error('Error:', error);
