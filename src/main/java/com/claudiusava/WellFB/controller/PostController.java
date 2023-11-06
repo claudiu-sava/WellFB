@@ -1,6 +1,7 @@
 package com.claudiusava.WellFB.controller;
 
 import com.claudiusava.WellFB.dto.LikeDto;
+import com.claudiusava.WellFB.dto.PostEditDto;
 import com.claudiusava.WellFB.model.Post;
 import com.claudiusava.WellFB.model.Upload;
 import com.claudiusava.WellFB.model.User;
@@ -119,6 +120,24 @@ public class PostController {
         System.out.println("Post deleted");
         
         return "redirect:/";
+    }
+
+    @PostMapping("/edit")
+    @ResponseBody
+    private PostEditDto editPost(@ModelAttribute PostEditDto postEditDto){
+
+        Post postToEdit = postRepository.findById(postEditDto.getId()).get();
+
+        postToEdit.setDescription(postEditDto.getDesc());
+        postToEdit.setId(postToEdit.getId());
+        postToEdit.setDate(postToEdit.getDate());
+        postToEdit.setLikedBy(postToEdit.getLikedBy());
+        postToEdit.setUploadFile(postToEdit.getUploadFile());
+        postToEdit.setUser(postToEdit.getUser());
+
+        postRepository.save(postToEdit);
+
+        return postEditDto;
     }
 
 }
