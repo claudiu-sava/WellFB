@@ -20,8 +20,9 @@
                 <tr th:each="post:${allPosts}">
                     <td>
 
-                        <div class="container-fluid">
-                            <h2 class="my-3" th:text="${post.getUser().getUsername()}"></h2>
+                        <div class="d-flex justify-content-center align-items-center" role="group">
+                            <img th:src="@{/drawable/user_icon_50.png}" alt="user" class="img-fluid profile-pic-icon">
+                            <h2 class="my-3 ml-3" th:text="${post.getUser().getUsername()}"></h2>
                         </div>
 
                         <img th:src="@{${post.getUploadFile().getFileName()}}" alt="image" class="img-fluid vh-100">
