@@ -38,14 +38,16 @@ public class PostController {
     @GetMapping("/new")
     private String newPostPage(Model model){
 
+        User loggedUser = userRepository.findByUsername(User.getLoggedUsername()).get();
+        model.addAttribute("loggedUser", loggedUser);
         model.addAttribute("title", "Add new post");
+
         return "newPost";
 
     }
 
     @PostMapping("/new")
-    private String newPost(Model model,
-                           @ModelAttribute Post post,
+    private String newPost(@ModelAttribute Post post,
                            @RequestParam("upload") MultipartFile upload) throws IOException {
 
         StringBuilder fileName = new StringBuilder();

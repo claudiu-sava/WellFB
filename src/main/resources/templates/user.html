@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <body>
-<div th:replace="~{/fragments/navbar :: header}"></div>
+<div th:replace="~{/fragments/navbar :: header(${loggedUser})}"></div>
 <div th:replace="~{/fragments/head :: head}"></div>
 <div th:insert="~{/fragments/postDeleteModal :: modal}"></div>
 <div th:insert="~{/fragments/postEditModal :: modal}"></div>

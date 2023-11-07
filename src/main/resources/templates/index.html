@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:replace="~{/fragments/navbar :: header}"></div>
+<div th:replace="~{/fragments/navbar :: header(${loggedUser})}"></div>
 <div th:replace="~{/fragments/head :: head}"></div>
 <div th:insert="~{/fragments/postDeleteModal :: modal}"></div>
 <div th:insert="~{/fragments/postEditModal :: modal}"></div>
@@ -21,7 +21,7 @@
                     <td>
 
                         <div class="d-flex justify-content-center align-items-center" role="group">
-                            <img th:src="@{/drawable/user_icon_50.png}" alt="user" class="img-fluid profile-pic-icon">
+                            <img th:src="@{${post.getUser().getAvatar().getFileName()}}" alt="user" class="img-fluid profile-pic-icon">
                             <h2 class="my-3 ml-3" th:text="${post.getUser().getUsername()}"></h2>
                         </div>
 
@@ -48,8 +48,8 @@
                 <tr th:each="user:${allUsers}">
                     <td>
                         <a th:href="@{/users/?username=__${user.getUsername()}__}">
-                            <div class="btn-group" role="group">
-                                <img th:src="@{/drawable/user_icon_50.png}" alt="user" class="ml-3">
+                            <div class="d-flex align-items-center" role="group">
+                                <img th:src="@{${user.getAvatar().getFileName()}}" alt="user" class="ml-3 img-fluid profile-pic-icon">
                                 <p th:text="${user.getUsername()}"></p>
                             </div>
                         </a>

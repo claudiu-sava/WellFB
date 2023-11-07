@@ -1,8 +1,10 @@
 package com.claudiusava.WellFB.controller;
 
+import com.claudiusava.WellFB.model.Avatar;
 import com.claudiusava.WellFB.model.Post;
 import com.claudiusava.WellFB.model.Role;
 import com.claudiusava.WellFB.model.User;
+import com.claudiusava.WellFB.repository.AvatarRepository;
 import com.claudiusava.WellFB.repository.PostRepository;
 import com.claudiusava.WellFB.repository.RoleRepository;
 import com.claudiusava.WellFB.repository.UserRepository;
@@ -27,6 +29,8 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private AvatarRepository avatarRepository;
 
 
     @PostMapping("/new")
@@ -40,6 +44,12 @@ public class UserController {
         userToDb.setRoles(Collections.singleton(roles));
 
         userToDb.setPosts(null);
+
+        Avatar userAvatar = new Avatar();
+        userAvatar.setFileName("/avatars/default_avatar_100.png");
+        avatarRepository.save(userAvatar);
+
+        userToDb.setAvatar(userAvatar);
 
         userRepository.save(userToDb);
 

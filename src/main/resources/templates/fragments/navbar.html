@@ -3,12 +3,10 @@
 
 <body>
 <div th:replace="~{/fragments/head :: head}"></div>
-<header>
+<header th:fragment="header(loggeduser)">
 
     <nav class="navbar navbar-light bg-light justify-content-between">
         <a class="navbar-brand" th:href="@{/}">WellFB</a>
-
-
 
         <form class="form-inline" method="get" th:action="@{/users/}">
             <a th:href="@{/post/new}">
@@ -20,9 +18,9 @@
 
             <div class="ml-5">
 
-                <div class="btn-group">
+                <div th:if="${loggeduser != null}" class="btn-group">
                     <a th:href="@{/users/}">
-                        <img th:src="@{/drawable/user_icon_50.png}" alt="user">
+                        <img th:src="@{${loggeduser.getAvatar().getFileName()}}" alt="user" class="img-fluid profile-pic-icon">
                     </a>
 
                     <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -36,6 +34,13 @@
                         <a class="dropdown-item" th:href="@{/logout}">Logout</a>
                     </div>
                 </div>
+
+                <div th:unless="${loggeduser != null}" class="btn-group">
+                    <a th:href="@{/users/}">
+                        <img th:src="@{/avatars/default_avatar_100.png}" alt="user" class="img-fluid profile-pic-icon">
+                    </a>
+                </div>
+
             </div>
 
 

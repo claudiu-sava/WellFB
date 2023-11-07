@@ -21,8 +21,11 @@ public class SecurityConfiguration{
     };
 
     private static final String[] anon_auth = {
+            "/css/styles.css",
+            "/js/script.js",
             "/users/new",
-            "/drawable/**"
+            "/drawable/**",
+            "avatars/default_avatar_100.png"
     };
 
     @Bean
