@@ -13,9 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.ListIterator;
+import java.util.*;
 
 import static com.claudiusava.WellFB.WellFbApplication.UPLOAD_DIRECTORY;
 import static com.claudiusava.WellFB.security.SecurityConfiguration.passwordEncoder;
@@ -34,20 +32,26 @@ public class IndexController {
         User loggedUser = userRepository.findByUsername(User.getLoggedUsername()).get();
 
         Iterable<Post> allPosts = postRepository.findAll();
-        Iterable<User> allUsers = userRepository.findFirst10By();
+        Iterable<User> allUsers = userRepository.findAll();
+        
+        List<User> allUsersList = new ArrayList<>();
+        allUsers.forEach(allUsersList::add);
 
-        Iterator<User> iterator = allUsers.iterator();
-        while (iterator.hasNext()){
-            if(iterator.next().equals(loggedUser)){
-                iterator.remove();
-            }
+        Collections.shuffle(allUsersList);
+
+        List<User> usersToShow = new ArrayList<>();
+
+        for (int i = 0; i <= 9; i++){
+            usersToShow.add(allUsersList.get(i));
         }
+
+
 
         model.addAttribute("title", "WellFB");
         model.addAttribute("loggedUser", loggedUser);
 
         model.addAttribute("allPosts", allPosts);
-        model.addAttribute("allUsers", allUsers);
+        model.addAttribute("allUsers", usersToShow);
 
         return "index";
     }
