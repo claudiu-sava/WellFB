@@ -33,7 +33,7 @@ public class IndexController {
 
         Iterable<Post> allPosts = postRepository.findAll();
         Iterable<User> allUsers = userRepository.findAll();
-        
+
         List<User> allUsersList = new ArrayList<>();
         allUsers.forEach(allUsersList::add);
 

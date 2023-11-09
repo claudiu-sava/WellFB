@@ -9,3 +9,10 @@ table {
     max-width: 50px;
     max-height: 50px;
 }
+
+.profile-pic-big {
+    border-radius: 50%;
+    object-fit: fill;
+    max-width: 100px;
+    max-height: 100px;
+}

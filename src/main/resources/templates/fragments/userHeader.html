@@ -5,7 +5,7 @@
 <div th:fragment="userHeader(user)" class="container-fluid ">
   <div class="d-flex align-items-center">
     <div>
-      <img th:src="@{${user.getAvatar().getFileName()}}" alt="Avatar">
+      <img th:src="@{${user.getAvatar().getFileName()}}" alt="Avatar" class="profile-pic-big">
     </div>
     <div class="ml-3">
       <h2 th:text="${user.getUsername}"></h2>
