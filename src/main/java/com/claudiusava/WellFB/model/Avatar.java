@@ -14,5 +14,5 @@ public class Avatar {
     private Integer id;
 
     @Column(nullable = false)
-    private String fileName = "/avatars/default_avatar_100.png";
+    private String fileName;
 }
