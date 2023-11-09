@@ -25,7 +25,7 @@ public class SecurityConfiguration{
             "/js/script.js",
             "/users/new",
             "/drawable/**",
-            "avatars/default_avatar_100.png"
+            "/avatars/default_avatar_100.png"
     };
 
     @Bean
