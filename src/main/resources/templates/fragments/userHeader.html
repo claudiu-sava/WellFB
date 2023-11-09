@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="userHeader(user)" class="container-fluid ">
+  <div class="d-flex align-items-center">
+    <div>
+      <img th:src="@{${user.getAvatar().getFileName()}}" alt="Avatar">
+    </div>
+    <div class="ml-3">
+      <h2 th:text="${user.getUsername}"></h2>
+    </div>
+  </div>
+</div>
+<hr>
+<div class="btn-group" role="group">
+  <button type="button" class="btn btn-primary mx-1">Follow</button>
+  <button type="button" class="btn btn-primary mx-1">Message</button>
+  <hr>
+</div>
+
+</body>
+</html>
