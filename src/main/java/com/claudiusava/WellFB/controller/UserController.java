@@ -70,7 +70,7 @@ public class UserController {
 
 
         if(username == null){
-            String usernameReplace = User.getLoggedUsername();
+            String usernameReplace = session.getLoggedUsername();
             redirectAttributes.addAttribute("username", usernameReplace);
             return "redirect:/users/";
         }
@@ -83,7 +83,7 @@ public class UserController {
         }
 
         User user = userOptional.get();
-        User loggedUser = userRepository.findByUsername(User.getLoggedUsername()).get();
+        User loggedUser = session.getLoggedUser();
 
 
         Iterable<Post> postsByUser = postRepository.findAllByUser(user);
@@ -103,7 +103,7 @@ public class UserController {
 
 
 
-        User loggedUser = userRepository.findByUsername(User.getLoggedUsername()).get();
+        User loggedUser = session.getLoggedUser();
 
         if(username == null || !username.equals(loggedUser.getUsername())){
             String usernameReplace = loggedUser.getUsername();

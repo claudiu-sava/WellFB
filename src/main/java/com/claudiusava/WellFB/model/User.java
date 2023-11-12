@@ -33,8 +33,4 @@ public class User {
     private Avatar avatar;
 
 
-    public static String getLoggedUsername(){
-        return SecurityContextHolder.getContext().getAuthentication().getName();
-    }
-
 }

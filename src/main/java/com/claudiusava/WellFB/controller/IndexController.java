@@ -6,6 +6,7 @@ import com.claudiusava.WellFB.model.User;
 import com.claudiusava.WellFB.repository.PostRepository;
 import com.claudiusava.WellFB.repository.RoleRepository;
 import com.claudiusava.WellFB.repository.UserRepository;
+import com.claudiusava.WellFB.service.Session;
 import com.claudiusava.WellFB.service.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,12 +25,14 @@ public class IndexController {
     private UserRepository userRepository;
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private Session session;
 
 
     @GetMapping("/")
     private String showIndexPage(Model model){
 
-        User loggedUser = userRepository.findByUsername(User.getLoggedUsername()).get();
+        User loggedUser = session.getLoggedUser();
 
         Iterable<Post> allPosts = postRepository.findAll();
         Iterable<User> allUsers = userRepository.findAll();
