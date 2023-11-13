@@ -58,9 +58,9 @@ function followUser(id){
         .then(data => {
             var response1 = JSON.parse(data);
             if(response1.isFollowing){
-                $("#" + id).text("Followed");
+                $("#" + id).text("Followed").toggleClass('btn-primary btn-secondary');
             } else {
-                $("#" + id).text("Follow");
+                $("#" + id).text("Follow").toggleClass('btn-secondary btn-primary');
             }
             $("#userHeaderFollowedByText").text("Followed By " + response1.followersCount);
         })
