@@ -51,6 +51,8 @@ public class UserController {
         userToDb.setRoles(Collections.singleton(roles));
 
         userToDb.setPosts(null);
+        userToDb.setFollows(null);
+        userToDb.setFollowedBy(null);
 
         Avatar userAvatar = new Avatar();
         userAvatar.setFileName("/avatars/default_avatar_100.png");

@@ -32,5 +32,11 @@ public class User {
     @OneToOne
     private Avatar avatar;
 
+    @ManyToMany
+    private List<User> followedBy;
+
+    @ManyToMany
+    private List<User> follows;
+
 
 }

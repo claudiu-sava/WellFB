@@ -8,7 +8,16 @@
       <img th:src="@{${user.getAvatar().getFileName()}}" alt="Avatar" class="profile-pic-big">
     </div>
     <div class="ml-3">
-      <h2 th:text="${user.getUsername}"></h2>
+      <h2 th:text="${user.getUsername()}"></h2>
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center mt-4">
+    <div class="mr-4">
+      <h4 th:text="'Followed By ' + ${user.getFollowedBy().size()}"></h4>
+    </div>
+    <div>
+      <h4 th:text="'Follows ' + ${user.getFollows().size()}"></h4>
     </div>
   </div>
 
