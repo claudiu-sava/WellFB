@@ -6,7 +6,7 @@
 <div th:replace="~{/fragments/head :: head}"></div>
 <div th:insert="~{/fragments/postDeleteModal :: modal}"></div>
 <div th:insert="~{/fragments/postEditModal :: modal}"></div>
-<div th:insert="~{/fragments/userHeader :: userHeader(${user})}"></div>
+<div th:insert="~{/fragments/userHeader :: userHeader(${user}, ${loggedUser})}"></div>
 
 <h3 class="mt-5">Posts</h3>
 

@@ -1,12 +1,14 @@
 package com.claudiusava.WellFB.controller;
 
 import com.claudiusava.WellFB.dto.ChangePasswordDto;
+import com.claudiusava.WellFB.dto.FollowUserDto;
 import com.claudiusava.WellFB.model.*;
 import com.claudiusava.WellFB.repository.AvatarRepository;
 import com.claudiusava.WellFB.repository.PostRepository;
 import com.claudiusava.WellFB.repository.RoleRepository;
 import com.claudiusava.WellFB.repository.UserRepository;
 import com.claudiusava.WellFB.service.Session;
+import com.claudiusava.WellFB.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.claudiusava.WellFB.WellFbApplication.*;
@@ -38,6 +41,8 @@ public class UserController {
     private AvatarRepository avatarRepository;
     @Autowired
     private Session session;
+    @Autowired
+    private UserService userService;
 
 
     @PostMapping("/new")
@@ -169,6 +174,45 @@ public class UserController {
 
         redirectAttributes.addAttribute("success", true);
         return "redirect:/users/edit?username=" + loggedUser.getUsername();
+    }
+
+    @PostMapping("/followUser")
+    @ResponseBody
+    private FollowUserDto followUser(@RequestParam("id") Integer id){
+
+        User loggedUser = session.getLoggedUser();
+        User userWhoGetsFollowed = userService.getUser(id);
+
+        if (userWhoGetsFollowed == null){
+            return null;
+        }
+
+        List<User> loggedUserFollowsList = loggedUser.getFollows();
+        List<User> userWhoGetsFollowedFollowedByList = userWhoGetsFollowed.getFollowedBy();
+
+        Boolean isFollowing = false;
+
+        if(loggedUser.getFollows().contains(userWhoGetsFollowed)){
+            loggedUserFollowsList.remove(userWhoGetsFollowed);
+            userWhoGetsFollowedFollowedByList.remove(loggedUser);
+        } else {
+            loggedUserFollowsList.add(userWhoGetsFollowed);
+            userWhoGetsFollowedFollowedByList.add(loggedUser);
+            isFollowing = true;
+        }
+
+        loggedUser.setFollows(loggedUserFollowsList);
+        userWhoGetsFollowed.setFollowedBy(userWhoGetsFollowedFollowedByList);
+
+        userService.saveChangesToUser(loggedUser);
+        userService.saveChangesToUser(userWhoGetsFollowed);
+
+        FollowUserDto followUserDto = new FollowUserDto();
+        followUserDto.setIsFollowing(isFollowing);
+        followUserDto.setFollowersCount(userWhoGetsFollowedFollowedByList.size());
+
+        return followUserDto;
+
     }
 
 

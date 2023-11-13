@@ -3,7 +3,7 @@
 <body>
 <div th:replace="~{/fragments/navbar :: header(${loggedUser})}"></div>
 <div th:replace="~{/fragments/head :: head}"></div>
-<div th:insert="~{/fragments/userHeader :: userHeader(${loggedUser})}"></div>
+<div th:insert="~{/fragments/userHeader :: userHeader(${loggedUser}, ${loggedUser})}"></div>
 
 <div class="mt-5">
 

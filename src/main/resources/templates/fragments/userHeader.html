@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div th:fragment="userHeader(user)" class="container-fluid ">
+<div th:fragment="userHeader(user, loggedUser)" class="container-fluid ">
   <div class="d-flex align-items-center">
     <div>
       <img th:src="@{${user.getAvatar().getFileName()}}" alt="Avatar" class="profile-pic-big">
@@ -14,7 +14,7 @@
 
   <div class="d-flex align-items-center mt-4">
     <div class="mr-4">
-      <h4 th:text="'Followed By ' + ${user.getFollowedBy().size()}"></h4>
+      <h4 id="userHeaderFollowedByText" th:text="'Followed By ' + ${user.getFollowedBy().size()}"></h4>
     </div>
     <div>
       <h4 th:text="'Follows ' + ${user.getFollows().size()}"></h4>
@@ -22,8 +22,8 @@
   </div>
 
   <hr>
-  <div class="btn-group" role="group">
-    <button type="button" class="btn btn-primary mx-1">Follow</button>
+  <div th:if="${user != loggedUser}" class="btn-group" role="group">
+    <button type="submit" th:id="${user.getId()}" onclick="followUser(this.id)" class="btn btn-primary mx-1">Follow</button>
     <button type="button" class="btn btn-primary mx-1">Message</button>
     <hr>
   </div>
