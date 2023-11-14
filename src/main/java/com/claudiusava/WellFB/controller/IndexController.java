@@ -1,10 +1,8 @@
 package com.claudiusava.WellFB.controller;
 
 import com.claudiusava.WellFB.model.Post;
-import com.claudiusava.WellFB.model.Role;
 import com.claudiusava.WellFB.model.User;
 import com.claudiusava.WellFB.repository.PostRepository;
-import com.claudiusava.WellFB.repository.RoleRepository;
 import com.claudiusava.WellFB.repository.UserRepository;
 import com.claudiusava.WellFB.service.Session;
 import com.claudiusava.WellFB.service.UserDetail;
@@ -12,12 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import java.util.*;
 
-import static com.claudiusava.WellFB.WellFbApplication.UPLOAD_DIRECTORY;
-import static com.claudiusava.WellFB.security.SecurityConfiguration.passwordEncoder;
 
 @Controller
 public class IndexController {
