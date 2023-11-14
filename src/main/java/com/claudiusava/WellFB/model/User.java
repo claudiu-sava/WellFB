@@ -29,9 +29,14 @@ public class User {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Post> posts;
 
+    @OneToOne
+    private Avatar avatar;
 
-    public static String getLoggedUsername(){
-        return SecurityContextHolder.getContext().getAuthentication().getName();
-    }
+    @ManyToMany
+    private List<User> followedBy;
+
+    @ManyToMany
+    private List<User> follows;
+
 
 }

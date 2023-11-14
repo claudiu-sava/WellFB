@@ -2,27 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <body>
-<div th:replace="~{/fragments/navbar :: header}"></div>
+<div th:replace="~{/fragments/navbar :: header(${loggedUser})}"></div>
 <div th:replace="~{/fragments/head :: head}"></div>
 <div th:insert="~{/fragments/postDeleteModal :: modal}"></div>
 <div th:insert="~{/fragments/postEditModal :: modal}"></div>
-
-
-<div class="container-fluid ">
-    <div class="d-flex align-items-center">
-        <div>
-            <img th:src="@{/drawable/user_icon_100.png}" alt="Your Image">
-        </div>
-        <div class="ml-3">
-            <h2 th:text="${loggedUser.getUsername()}"></h2>
-        </div>
-    </div>
-</div>
-<hr>
-<div class="btn-group" role="group">
-    <button type="button" class="btn btn-primary mx-1">Follow</button>
-    <button type="button" class="btn btn-primary mx-1">Message</button>
-</div>
+<div th:insert="~{/fragments/userHeader :: userHeader(${user}, ${loggedUser})}"></div>
 
 <h3 class="mt-5">Posts</h3>
 

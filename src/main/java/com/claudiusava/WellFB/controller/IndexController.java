@@ -4,6 +4,8 @@ import com.claudiusava.WellFB.model.Post;
 import com.claudiusava.WellFB.model.User;
 import com.claudiusava.WellFB.repository.PostRepository;
 import com.claudiusava.WellFB.repository.UserRepository;
+import com.claudiusava.WellFB.service.Session;
+import com.claudiusava.WellFB.service.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,29 +20,37 @@ public class IndexController {
     private UserRepository userRepository;
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private Session session;
 
 
     @GetMapping("/")
     private String showIndexPage(Model model){
 
-        User loggedUser = userRepository.findByUsername(User.getLoggedUsername()).get();
+        User loggedUser = session.getLoggedUser();
 
         Iterable<Post> allPosts = postRepository.findAll();
-        List<User> list10Users = new ArrayList<>();
+        Iterable<User> allUsers = userRepository.findAll();
 
-        List<User> allUsers = userRepository.findAllByOrderByUsernameAsc();
-        allUsers.remove(loggedUser);
-        Collections.shuffle(allUsers);
+        List<User> allUsersList = new ArrayList<>();
+        allUsers.forEach(allUsersList::add);
 
-        for (int i = 0; i <= 9; i ++){
-            list10Users.add(allUsers.get(i));
+        Collections.shuffle(allUsersList);
+
+        List<User> usersToShow = new ArrayList<>();
+
+        for (int i = 0; i <= 9; i++){
+            if (!allUsersList.get(i).equals(loggedUser)){
+                usersToShow.add(allUsersList.get(i));
+            }
         }
+
 
         model.addAttribute("title", "WellFB");
         model.addAttribute("loggedUser", loggedUser);
 
         model.addAttribute("allPosts", allPosts);
-        model.addAttribute("allUsers", list10Users);
+        model.addAttribute("allUsers", usersToShow);
 
         return "index";
     }

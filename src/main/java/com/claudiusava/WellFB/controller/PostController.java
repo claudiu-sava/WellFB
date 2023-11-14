@@ -8,6 +8,7 @@ import com.claudiusava.WellFB.model.User;
 import com.claudiusava.WellFB.repository.PostRepository;
 import com.claudiusava.WellFB.repository.UploadRepository;
 import com.claudiusava.WellFB.repository.UserRepository;
+import com.claudiusava.WellFB.service.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,8 +27,8 @@ import static com.claudiusava.WellFB.WellFbApplication.UPLOAD_DIRECTORY;
 @Controller
 @RequestMapping("/post")
 public class PostController {
-
-
+    @Autowired
+    private Session session;
     @Autowired
     private PostRepository postRepository;
     @Autowired
@@ -38,14 +39,16 @@ public class PostController {
     @GetMapping("/new")
     private String newPostPage(Model model){
 
+        User loggedUser = session.getLoggedUser();
+        model.addAttribute("loggedUser", loggedUser);
         model.addAttribute("title", "Add new post");
+
         return "newPost";
 
     }
 
     @PostMapping("/new")
-    private String newPost(Model model,
-                           @ModelAttribute Post post,
+    private String newPost(@ModelAttribute Post post,
                            @RequestParam("upload") MultipartFile upload) throws IOException {
 
         StringBuilder fileName = new StringBuilder();
@@ -63,7 +66,7 @@ public class PostController {
         postToDb.setDescription(post.getDescription());
         postToDb.setUploadFile(uploadToDb);
 
-        User user = userRepository.findByUsername(User.getLoggedUsername()).get();
+        User user = session.getLoggedUser();
         List<Post> userPost = user.getPosts();
         postToDb.setUser(user);
         userPost.add(postToDb);
@@ -80,7 +83,7 @@ public class PostController {
     public LikeDto likePost(@RequestParam("id") Integer postId) {
 
         Post post = postRepository.findById(postId).get();
-        User user = userRepository.findByUsername(User.getLoggedUsername()).get();
+        User user = session.getLoggedUser();
         List<User> postLikedBy = post.getLikedBy();
 
         boolean liked = false;

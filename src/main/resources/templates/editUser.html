@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:replace="~{/fragments/navbar :: header(${loggedUser})}"></div>
+<div th:replace="~{/fragments/head :: head}"></div>
+<div th:insert="~{/fragments/userHeader :: userHeader(${loggedUser}, ${loggedUser})}"></div>
+
+<div class="mt-5">
+
+    <form th:action="@{/users/pswd}" method="post">
+
+        <h3>Change your password</h3>
+        <hr>
+
+        <div th:if="${param.passwordDoesNotMatch}" class="alert alert-danger" role="alert">
+            New password does not match!
+        </div>
+
+        <div th:if="${param.success}" class="alert alert-success" role="alert">
+            Action completed successfully!
+        </div>
+
+        <div th:if="${param.wrongPassword}" class="alert alert-danger" role="alert">
+            Please enter your old password correctly!
+        </div>
+
+        <label for="oldPassword" class="form-label">Old Password</label>
+        <input type="password" id="oldPassword" name="oldPassword" class="form-control" placeholder="Old Password">
+
+        <label for="newPassword" class="form-label">New Password</label>
+        <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="New Password">
+
+        <label for="confirmNewPassword" class="form-label">Confirm Password</label>
+        <input type="password" id="confirmNewPassword" name="confirmNewPassword" class="form-control" aria-describedby="passwordHelpBlock" placeholder="Confirm Password">
+        <div id="passwordHelpBlock" class="form-text">
+            Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+        </div>
+
+        <button class="btn btn-outline-secondary mt-1" type="submit">Change Password</button>
+
+    </form>
+</div>
+
+<div class="mt-5">
+    <form method="post" th:action="@{/users/changeAvatar}" enctype="multipart/form-data">
+
+        <h3>Change Avatar</h3>
+
+        <div class="form-group">
+            <input type="file" name="avatar" accept="image/*" class="form-control-file">
+        </div>
+
+        <button type="submit" class="btn btn-outline-secondary mt-1">Change Avatar</button>
+    </form>
+</div>
+
+
+
+</body>
+</html>

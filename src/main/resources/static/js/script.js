@@ -4,7 +4,6 @@ function deletePost(id){
     })
         .then(response => response.text())
         .then(data => {
-            console.log(data)
             location.reload();
         })
         .catch(error => {
@@ -15,8 +14,6 @@ function deletePost(id){
 
 function update(id){
     var postId = id.replace("likeButton_", "");
-
-     console.log(postId)
 
     fetch('/post/like' + "?id=" + postId, {
         method: 'POST',
@@ -51,6 +48,25 @@ function editPost(id, desc){
             console.error('Error:', error);
         });
 
+}
+
+function followUser(id){
+    fetch('/users/followUser' + "?id=" + id, {
+        method: 'POST',
+    })
+        .then(response => response.text())
+        .then(data => {
+            var response1 = JSON.parse(data);
+            if(response1.isFollowing){
+                $("#" + id).text("Followed").toggleClass('btn-primary btn-secondary');
+            } else {
+                $("#" + id).text("Follow").toggleClass('btn-secondary btn-primary');
+            }
+            $("#userHeaderFollowedByText").text("Followed By " + response1.followersCount);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
 $( document ).ready(function() {
