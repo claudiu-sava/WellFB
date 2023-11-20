@@ -7,8 +7,9 @@ import com.claudiusava.WellFB.repository.AvatarRepository;
 import com.claudiusava.WellFB.repository.PostRepository;
 import com.claudiusava.WellFB.repository.RoleRepository;
 import com.claudiusava.WellFB.repository.UserRepository;
-import com.claudiusava.WellFB.service.Session;
+import com.claudiusava.WellFB.service.SessionService;
 import com.claudiusava.WellFB.service.UserService;
+import com.claudiusava.WellFB.service.UserStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,9 +41,11 @@ public class UserController {
     @Autowired
     private AvatarRepository avatarRepository;
     @Autowired
-    private Session session;
+    private SessionService sessionService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserStatusService userStatusService;
 
 
     @PostMapping("/new")
@@ -77,7 +80,7 @@ public class UserController {
 
 
         if(username == null){
-            String usernameReplace = session.getLoggedUsername();
+            String usernameReplace = sessionService.getLoggedUsername();
             redirectAttributes.addAttribute("username", usernameReplace);
             return "redirect:/users/";
         }
@@ -90,7 +93,7 @@ public class UserController {
         }
 
         User user = userOptional.get();
-        User loggedUser = session.getLoggedUser();
+        User loggedUser = sessionService.getLoggedUser();
 
 
         Iterable<Post> postsByUser = postRepository.findAllByUser(user);
@@ -100,6 +103,7 @@ public class UserController {
         model.addAttribute("title", username);
         model.addAttribute("loggedUser", loggedUser);
         model.addAttribute("user", user);
+        model.addAttribute("userStatusService", userStatusService);
         return "user";
     }
 
@@ -110,7 +114,7 @@ public class UserController {
 
 
 
-        User loggedUser = session.getLoggedUser();
+        User loggedUser = sessionService.getLoggedUser();
 
         if(username == null || !username.equals(loggedUser.getUsername())){
             String usernameReplace = loggedUser.getUsername();
@@ -120,6 +124,7 @@ public class UserController {
 
         model.addAttribute("title", "Edit: " + loggedUser.getUsername());
         model.addAttribute("loggedUser", loggedUser);
+        model.addAttribute("userStatusService", userStatusService);
 
         return "editUser";
     }
@@ -128,7 +133,7 @@ public class UserController {
     private String changePassword(@ModelAttribute ChangePasswordDto changePasswordDto,
                                   RedirectAttributes redirectAttributes){
 
-        User loggedUser = session.getLoggedUser();
+        User loggedUser = sessionService.getLoggedUser();
 
         if(passwordEncoder().matches(changePasswordDto.getOldPassword(), loggedUser.getPassword())){
 
@@ -154,7 +159,7 @@ public class UserController {
     @PostMapping("/changeAvatar")
     private String changeAvatar(RedirectAttributes redirectAttributes,
                                 @RequestParam("avatar") MultipartFile avatar) throws IOException{
-        User loggedUser = session.getLoggedUser();
+        User loggedUser = sessionService.getLoggedUser();
         Avatar oldAvatar = loggedUser.getAvatar();
 
         StringBuilder fileName = new StringBuilder();
@@ -180,7 +185,7 @@ public class UserController {
     @ResponseBody
     private FollowUserDto followUser(@RequestParam("id") Integer id){
 
-        User loggedUser = session.getLoggedUser();
+        User loggedUser = sessionService.getLoggedUser();
         User userWhoGetsFollowed = userService.getUser(id);
 
         if (userWhoGetsFollowed == null){

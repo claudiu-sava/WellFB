@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Session{
+public class SessionService {
     @Autowired
     private UserRepository userRepository;
     public String getLoggedUsername(){
