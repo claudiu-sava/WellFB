@@ -47,7 +47,6 @@ public class UserController {
     @Autowired
     private UserStatusService userStatusService;
 
-
     @PostMapping("/new")
     private String newUser(@ModelAttribute User user){
 
@@ -74,16 +73,8 @@ public class UserController {
     }
 
     @GetMapping("/")
-    private String getUserPage(@RequestParam(value = "username", required = false) String username,
-                               RedirectAttributes redirectAttributes,
+    private String getUserPage(@RequestParam(value = "username") String username,
                                Model model){
-
-
-        if(username == null){
-            String usernameReplace = sessionService.getLoggedUsername();
-            redirectAttributes.addAttribute("username", usernameReplace);
-            return "redirect:/users/";
-        }
 
 
         Optional<User> userOptional = userRepository.findByUsername(username);
@@ -186,7 +177,7 @@ public class UserController {
     private FollowUserDto followUser(@RequestParam("id") Integer id){
 
         User loggedUser = sessionService.getLoggedUser();
-        User userWhoGetsFollowed = userService.getUser(id);
+        User userWhoGetsFollowed = userService.getUserById(id);
 
         if (userWhoGetsFollowed == null){
             return null;
@@ -217,6 +208,21 @@ public class UserController {
         followUserDto.setFollowersCount(userWhoGetsFollowedFollowedByList.size());
 
         return followUserDto;
+
+    }
+
+    @GetMapping("/search")
+    public String searchUserPage(@RequestParam("username") String username,
+                                 Model model){
+
+        List<User> userList = userService.searchUsersByUsername(username);
+
+        model.addAttribute("title", "Search for " + username);
+        model.addAttribute("userList", userList);
+        model.addAttribute("loggedUser", sessionService.getLoggedUser());
+        model.addAttribute("userStatusService", userStatusService);
+
+        return "userSearch";
 
     }
 

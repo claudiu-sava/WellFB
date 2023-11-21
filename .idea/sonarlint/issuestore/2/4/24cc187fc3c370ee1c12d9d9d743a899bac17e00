@@ -1,0 +1,23 @@
+
+m
+java:S1192_"KDefine a constant instead of duplicating this literal "loggedUser" 3 times.(ˆÿµÆüÿÿÿÿ8„…—Š¿1
+t
+java:S1192a"RDefine a constant instead of duplicating this literal "userStatusService" 3 times.(÷ö°øÿÿÿÿ8à µŠ¿1
+h
+java:S1192^"FDefine a constant instead of duplicating this literal "title" 3 times.(è¨äûÿÿÿÿ8©ƒŠ¿1
+‚
+java:S1192Š"_Define a constant instead of duplicating this literal "redirect:/users/edit?username=" 4 times.(•Îıúÿÿÿÿ8ªƒŠ¿1
+r
+java:S36559"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ŒüóÜûÿÿÿÿ8“ƒŠ¿1
+;
+java:S37513"Make this method non "private".(â¼¡8ªƒŠ¿1
+<
+java:S3751L"Make this method non "private".(£ºÙÁ8¶ƒŠ¿1
+A
+java:S3751f"Make this method non "private".(ÿæì–ÿÿÿÿÿ8½ƒŠ¿1
+A
+java:S3751|"Make this method non "private".(¿°Ëÿÿÿÿÿ8ÇƒŠ¿1
+B
+java:S3751—"Make this method non "private".(Ç¢ÿÖÿÿÿÿÿ8ÍƒŠ¿1
+=
+java:S3751±"Make this method non "private".(¨·ß«8ÖƒŠ¿1

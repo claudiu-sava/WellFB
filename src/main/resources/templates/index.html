@@ -50,8 +50,8 @@
                         <a th:href="@{/users/?username=__${user.getUsername()}__}">
                             <div class="d-flex align-items-center" role="group">
                                 <div>
-                                    <img th:if="${userStatusService.isUserOnline(user)}" th:src="@{/drawable/status_icon_48.png}" alt="user" class="img-fluid status-icon-small">
-                                    <img th:src="@{${user.getAvatar().getFileName()}}" alt="user" class="mr-3 img-fluid profile-pic-icon">
+                                    <img th:if="${userStatusService.isUserOnline(user)}" th:src="@{/drawable/status_icon_48.png}" alt="user" class="status-icon-small">
+                                    <img th:src="@{${user.getAvatar().getFileName()}}" alt="user" class="mr-3 profile-pic-icon">
                                 </div>
                                 <p th:text="${user.getUsername()}"></p>
                             </div>
