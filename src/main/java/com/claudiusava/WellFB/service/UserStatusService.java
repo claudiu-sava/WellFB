@@ -37,7 +37,8 @@ public class UserStatusService {
 
         LocalDateTime actualTimestamp = LocalDateTime.now();
 
-        if(userStatusRepository.findFirstByUsernameOrderByTimestampDesc(user.getUsername()).isPresent() && Duration.between(userStatusRepository.findFirstByUsernameOrderByTimestampDesc(user.getUsername()).get().getTimestamp(), actualTimestamp).toMinutes() < 10){
+        if(userStatusRepository.findFirstByUsernameOrderByTimestampDesc(user.getUsername()).isPresent() &&
+                Duration.between(userStatusRepository.findFirstByUsernameOrderByTimestampDesc(user.getUsername()).get().getTimestamp(), actualTimestamp).toMinutes() < 10){
             user.setIsOnline(true);
             userService.saveChangesToUser(user);
             return true;
