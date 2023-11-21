@@ -49,7 +49,10 @@
                     <td>
                         <a th:href="@{/users/?username=__${user.getUsername()}__}">
                             <div class="d-flex align-items-center" role="group">
-                                <img th:src="@{${user.getAvatar().getFileName()}}" alt="user" class="ml-3 img-fluid profile-pic-icon">
+                                <div>
+                                    <img th:if="${userStatusService.isUserOnline(user)}" th:src="@{/drawable/status_icon_48.png}" alt="user" class="img-fluid status-icon-small">
+                                    <img th:src="@{${user.getAvatar().getFileName()}}" alt="user" class="mr-3 img-fluid profile-pic-icon">
+                                </div>
                                 <p th:text="${user.getUsername()}"></p>
                             </div>
                         </a>

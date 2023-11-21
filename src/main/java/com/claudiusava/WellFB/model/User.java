@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 import java.util.Set;
@@ -37,6 +36,8 @@ public class User {
 
     @ManyToMany
     private List<User> follows;
+
+    private Boolean isOnline;
 
 
 }
