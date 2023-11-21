@@ -222,10 +222,6 @@ public class UserController {
         model.addAttribute("loggedUser", sessionService.getLoggedUser());
         model.addAttribute("userStatusService", userStatusService);
 
-        for(User user : userList){
-            System.out.println(user.getUsername());
-        }
-
         return "userSearch";
 
     }

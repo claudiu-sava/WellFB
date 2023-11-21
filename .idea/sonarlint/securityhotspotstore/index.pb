@@ -9,3 +9,5 @@ s
 Csrc/main/java/com/claudiusava/WellFB/repository/UserRepository.java,d/d/dd29f7c71511ced653fcc4c3841540c95dcfae93
 y
 Isrc/main/java/com/claudiusava/WellFB/repository/UserStatusRepository.java,b/b/bba0b26a1c7219bbd66b50f5da5d67d07f1f563f
+p
+@src/main/java/com/claudiusava/WellFB/service/SessionService.java,c/f/cfd52fdb36b4fa21f0058b5aed361e7b26a64cd9
