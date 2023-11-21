@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:replace="~{/fragments/navbar :: header(${loggedUser})}"></div>
+<div th:replace="~{/fragments/head :: head}"></div>
+
+<div th:if="${userList.isEmpty()}" class="h-100 d-flex justify-content-center">
+  <img th:src="@{/drawable/userNotFound_ilustration.png}" alt="user" >
+  <h2>No user found</h2>
+</div>
+
+<table class="ml-5">
+  <tbody>
+  <tr th:each="user : ${userList}">
+    <td>
+      <a th:href="@{/users/?username=__${user.getUsername()}__}">
+        <div class="d-flex align-items-center" role="group">
+          <div>
+            <img th:if="${userStatusService.isUserOnline(user)}" th:src="@{/drawable/status_icon_48.png}" alt="user" class="img-fluid status-icon-big">
+            <img th:if="${userStatusService.isUserOnline(user)}" th:src="@{${user.getAvatar().getFileName()}}" alt="user" class="mr-3 profile-pic-big">
+            <img th:unless="${userStatusService.isUserOnline(user)}" th:src="@{${user.getAvatar().getFileName()}}" alt="user" class="mr-3 profile-pic-big" style="margin-left: 29.5px">
+          </div>
+          <p th:text="${user.getUsername()}"></p>
+        </div>
+      </a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+
+</body>
+</html>
