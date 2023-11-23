@@ -3,15 +3,18 @@
 
 <body>
 <div th:replace="~{/fragments/head :: head}"></div>
+
 <header th:fragment="header(loggeduser)">
+    <div th:insert="~{/fragments/newPostModal :: modal}"></div>
+
 
     <nav class="navbar navbar-light bg-light justify-content-between">
         <a class="navbar-brand" th:href="@{/}">WellFB</a>
 
         <form class="form-inline" method="get" th:action="@{/users/search}">
-            <a th:href="@{/post/new}">
-                <button type="button" class="btn btn-outline-primary mr-3">New Post</button>
-            </a>
+
+            <button th:if="${loggeduser != null}" type="button" data-toggle="modal" data-target="#newPostModal" class="btn btn-outline-primary mr-3">New Post</button>
+
 
             <input class="form-control mr-sm-2" type="search" name="username" placeholder="Search for User" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>

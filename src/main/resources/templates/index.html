@@ -11,9 +11,6 @@
     <div class="row">
         <div class="col-md-9 text-center">
             <!-- Left column content -->
-            <h2>Column 1</h2>
-            <p>This is the content for column 1.</p>
-
             <table class="table">
 
                 <tbody>
@@ -21,7 +18,7 @@
                     <td>
 
                         <div class="d-flex justify-content-center align-items-center" role="group">
-                            <img th:src="@{${post.getUser().getAvatar().getFileName()}}" alt="user" class="img-fluid profile-pic-icon">
+                            <img th:src="@{${post.getUser().getAvatar().getFileName()}}" alt="user" class="profile-pic-icon">
                             <h2 class="my-3 ml-3" th:text="${post.getUser().getUsername()}"></h2>
                         </div>
 
@@ -36,13 +33,10 @@
 
             </table>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 mt-5">
             <!-- Right column content -->
-            <h2>Column 2</h2>
-            <p>This is the content for column 2.</p>
-
             <h2>You might know them</h2>
-            <table class="table">
+            <table class="table mt-3">
 
                 <tbody>
                 <tr th:each="user:${allUsers}">
@@ -65,5 +59,6 @@
     </div>
 </div>
 
+<div th:insert="~{/fragments/footer :: footer}"></div>
 </body>
 </html>
