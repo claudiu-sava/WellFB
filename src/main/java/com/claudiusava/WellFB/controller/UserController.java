@@ -73,19 +73,22 @@ public class UserController {
     }
 
     @GetMapping("/")
-    private String getUserPage(@RequestParam(value = "username") String username,
+    public String getUserPage(@RequestParam(value = "username", required = false) String username,
                                Model model){
 
+        User loggedUser = sessionService.getLoggedUser();
+
+        if(username == null){
+            return "redirect:/users/?username=" + loggedUser.getUsername();
+        }
 
         Optional<User> userOptional = userRepository.findByUsername(username);
 
         if(userOptional.isEmpty()){
-            return "redirect:/error";
+            return "redirect:/error?userNotFound";
         }
 
         User user = userOptional.get();
-        User loggedUser = sessionService.getLoggedUser();
-
 
         Iterable<Post> postsByUser = postRepository.findAllByUser(user);
 
@@ -121,8 +124,7 @@ public class UserController {
     }
 
     @PostMapping("/pswd")
-    private String changePassword(@ModelAttribute ChangePasswordDto changePasswordDto,
-                                  RedirectAttributes redirectAttributes){
+    private String changePassword(@ModelAttribute ChangePasswordDto changePasswordDto){
 
         User loggedUser = sessionService.getLoggedUser();
 
@@ -134,23 +136,26 @@ public class UserController {
                 userRepository.save(loggedUser);
 
             } else {
-                redirectAttributes.addAttribute("passwordDoesNotMatch", true);
-                return "redirect:/users/edit?username=" + loggedUser.getUsername();
+                return "redirect:/users/edit?username=" + loggedUser.getUsername() + "&passwordDoesNotMatch";
             }
 
         } else {
-            redirectAttributes.addAttribute("wrongPassword", true);
-            return "redirect:/users/edit?username=" + loggedUser.getUsername();
+            return "redirect:/users/edit?username=" + loggedUser.getUsername() + "&wrongPassword";
         }
-        redirectAttributes.addAttribute("success", true);
-        return "redirect:/users/edit?username=" + loggedUser.getUsername();
+        return "redirect:/users/edit?username=" + loggedUser.getUsername() + "&success";
     }
 
 
     @PostMapping("/changeAvatar")
     private String changeAvatar(RedirectAttributes redirectAttributes,
                                 @RequestParam("avatar") MultipartFile avatar) throws IOException{
+
         User loggedUser = sessionService.getLoggedUser();
+
+        if (avatar.getOriginalFilename().isEmpty()) {
+            return "redirect:/users/edit?username=" + loggedUser.getUsername() + "&noNewAvatar";
+        }
+
         Avatar oldAvatar = loggedUser.getAvatar();
 
         StringBuilder fileName = new StringBuilder();
@@ -168,8 +173,7 @@ public class UserController {
 
         avatarRepository.delete(oldAvatar);
 
-        redirectAttributes.addAttribute("success", true);
-        return "redirect:/users/edit?username=" + loggedUser.getUsername();
+        return "redirect:/users/edit?username=" + loggedUser.getUsername() + "&success";
     }
 
     @PostMapping("/followUser")

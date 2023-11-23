@@ -49,7 +49,11 @@ public class PostController {
 
     @PostMapping("/new")
     private String newPost(@ModelAttribute Post post,
-                           @RequestParam("upload") MultipartFile upload) throws IOException {
+                           @RequestParam(value = "upload", required = false) MultipartFile upload) throws IOException {
+
+        if(upload.getOriginalFilename().isEmpty()){
+            return "redirect:/post/new?error";
+        }
 
         StringBuilder fileName = new StringBuilder();
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, upload.getOriginalFilename());
@@ -70,7 +74,6 @@ public class PostController {
         List<Post> userPost = user.getPosts();
         postToDb.setUser(user);
         userPost.add(postToDb);
-
 
         postRepository.save(postToDb);
         userRepository.save(user);
@@ -110,19 +113,24 @@ public class PostController {
     private String deletePost(@RequestParam("id") Integer postId){
 
         Post postToDelete = postRepository.findById(postId).get();
-        User user = userRepository.findById(postToDelete.getUser().getId()).get();
-        Upload upload = uploadRepository.findById(postToDelete.getUploadFile().getId()).get();
 
-        List<Post> allUserPosts = user.getPosts();
-        allUserPosts.remove(postToDelete);
-        user.setPosts(allUserPosts);
+        if (postToDelete.getUser() == sessionService.getLoggedUser()){
+            User user = userRepository.findById(postToDelete.getUser().getId()).get();
+            Upload upload = uploadRepository.findById(postToDelete.getUploadFile().getId()).get();
 
-        userRepository.save(user);
-        postRepository.delete(postToDelete);
-        uploadRepository.delete(upload);
-        System.out.println("Post deleted");
-        
-        return "redirect:/";
+            List<Post> allUserPosts = user.getPosts();
+            allUserPosts.remove(postToDelete);
+            user.setPosts(allUserPosts);
+
+            userRepository.save(user);
+            postRepository.delete(postToDelete);
+            uploadRepository.delete(upload);
+
+            return "redirect:/";
+        }
+
+        return "redirect:/error?somethingWentWrong";
+
     }
 
     @PostMapping("/edit")
@@ -131,16 +139,21 @@ public class PostController {
 
         Post postToEdit = postRepository.findById(postEditDto.getId()).get();
 
-        postToEdit.setDescription(postEditDto.getDesc());
-        postToEdit.setId(postToEdit.getId());
-        postToEdit.setDate(postToEdit.getDate());
-        postToEdit.setLikedBy(postToEdit.getLikedBy());
-        postToEdit.setUploadFile(postToEdit.getUploadFile());
-        postToEdit.setUser(postToEdit.getUser());
+        if (sessionService.getLoggedUser() == postToEdit.getUser()){
+            postToEdit.setDescription(postEditDto.getDesc());
+            postToEdit.setId(postToEdit.getId());
+            postToEdit.setDate(postToEdit.getDate());
+            postToEdit.setLikedBy(postToEdit.getLikedBy());
+            postToEdit.setUploadFile(postToEdit.getUploadFile());
+            postToEdit.setUser(postToEdit.getUser());
 
-        postRepository.save(postToEdit);
+            postRepository.save(postToEdit);
 
-        return postEditDto;
+            return postEditDto;
+        }
+
+        return postEditDto; // unchanged post
+
     }
 
 }
