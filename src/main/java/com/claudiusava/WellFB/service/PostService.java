@@ -6,6 +6,7 @@ import com.claudiusava.WellFB.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,7 +38,7 @@ public class PostService {
 
     }
 
-    public Iterable<Post> getAllPostsByUser(User user){
+    public List<Post> getAllPostsByUser(User user){
 
         return postRepository.findAllByUser(user);
 

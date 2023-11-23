@@ -80,7 +80,7 @@ public class UserController {
             return "redirect:/error?userNotFound";
         }
 
-        Iterable<Post> postsByUser = postService.getAllPostsByUser(user);
+        List<Post> postsByUser = postService.getAllPostsByUser(user);
 
         model.addAttribute("allPostsByUser", postsByUser);
         model.addAttribute("username", username);
