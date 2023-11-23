@@ -37,15 +37,15 @@ public class PostService {
 
     }
 
-    public Iterable<Post> getAllPosts(){
-
-        return postRepository.findAll();
-
-    }
-
     public Iterable<Post> getAllPostsByUser(User user){
 
         return postRepository.findAllByUser(user);
+
+    }
+
+    public Iterable<Post> getAllPostsDesc(){
+
+        return postRepository.findAllByOrderByDateDesc();
 
     }
 }

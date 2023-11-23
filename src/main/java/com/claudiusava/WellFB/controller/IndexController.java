@@ -33,7 +33,7 @@ public class IndexController {
 
         User loggedUser = sessionService.getLoggedUser();
 
-        Iterable<Post> allPosts = postService.getAllPosts();
+        Iterable<Post> allPosts = postService.getAllPostsDesc();
         Iterable<User> allUsers = userService.getAllUsers();
 
         List<User> allUsersList = new ArrayList<>();
