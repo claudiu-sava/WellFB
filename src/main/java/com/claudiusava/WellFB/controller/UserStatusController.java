@@ -10,7 +10,7 @@ public class UserStatusController {
     private UserStatusService userStatusService;
 
     @GetMapping("/status")
-    private void setUserStatus(){
+    public void setUserStatus(){
 
         userStatusService.setUserStatus();
 

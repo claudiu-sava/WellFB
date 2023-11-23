@@ -31,4 +31,22 @@ public class UserService {
 
     }
 
+    public Iterable<User> getAllUsers(){
+
+        return userRepository.findAll();
+
+    }
+
+    public User getUserByUsername(String username){
+
+        Optional<User> userOptional = userRepository.findByUsername(username);
+
+        if(userOptional.isPresent()){
+            return userOptional.get();
+        }
+
+        return null;
+
+    }
+
 }
