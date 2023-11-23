@@ -4,7 +4,9 @@ import com.claudiusava.WellFB.model.Post;
 import com.claudiusava.WellFB.model.User;
 import com.claudiusava.WellFB.repository.PostRepository;
 import com.claudiusava.WellFB.repository.UserRepository;
+import com.claudiusava.WellFB.service.PostService;
 import com.claudiusava.WellFB.service.SessionService;
+import com.claudiusava.WellFB.service.UserService;
 import com.claudiusava.WellFB.service.UserStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,22 +19,22 @@ import java.util.*;
 @Controller
 public class IndexController {
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PostRepository postRepository;
-    @Autowired
     private SessionService sessionService;
     @Autowired
     private UserStatusService userStatusService;
+    @Autowired
+    private PostService postService;
+    @Autowired
+    private UserService userService;
 
 
     @GetMapping("/")
-    private String showIndexPage(Model model){
+    public String showIndexPage(Model model){
 
         User loggedUser = sessionService.getLoggedUser();
 
-        Iterable<Post> allPosts = postRepository.findAll();
-        Iterable<User> allUsers = userRepository.findAll();
+        Iterable<Post> allPosts = postService.getAllPosts();
+        Iterable<User> allUsers = userService.getAllUsers();
 
         List<User> allUsersList = new ArrayList<>();
         allUsers.forEach(allUsersList::add);
@@ -46,7 +48,6 @@ public class IndexController {
                 usersToShow.add(allUsersList.get(i));
             }
         }
-
 
 
         model.addAttribute("title", "WellFB");

@@ -5,10 +5,11 @@ import com.claudiusava.WellFB.dto.PostEditDto;
 import com.claudiusava.WellFB.model.Post;
 import com.claudiusava.WellFB.model.Upload;
 import com.claudiusava.WellFB.model.User;
-import com.claudiusava.WellFB.repository.PostRepository;
-import com.claudiusava.WellFB.repository.UploadRepository;
-import com.claudiusava.WellFB.repository.UserRepository;
+
+import com.claudiusava.WellFB.service.PostService;
 import com.claudiusava.WellFB.service.SessionService;
+import com.claudiusava.WellFB.service.UploadService;
+import com.claudiusava.WellFB.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,14 +31,14 @@ public class PostController {
     @Autowired
     private SessionService sessionService;
     @Autowired
-    private PostRepository postRepository;
+    private PostService postService;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @Autowired
-    private UploadRepository uploadRepository;
+    private UploadService uploadService;
 
     @GetMapping("/new")
-    private String newPostPage(Model model){
+    public String newPostPage(Model model){
 
         User loggedUser = sessionService.getLoggedUser();
         model.addAttribute("loggedUser", loggedUser);
@@ -48,7 +49,7 @@ public class PostController {
     }
 
     @PostMapping("/new")
-    private String newPost(@ModelAttribute Post post,
+    public String newPost(@ModelAttribute Post post,
                            @RequestParam(value = "upload", required = false) MultipartFile upload) throws IOException {
 
         if(upload.getOriginalFilename().isEmpty()){
@@ -63,7 +64,7 @@ public class PostController {
         Upload uploadToDb = new Upload();
         uploadToDb.setFileName(UPLOAD_BASE + fileName);
 
-        uploadRepository.save(uploadToDb);
+        uploadService.saveUpload(uploadToDb);
 
         Post postToDb = new Post();
         postToDb.setLikedBy(null);
@@ -75,8 +76,8 @@ public class PostController {
         postToDb.setUser(user);
         userPost.add(postToDb);
 
-        postRepository.save(postToDb);
-        userRepository.save(user);
+        postService.savePost(postToDb);
+        userService.saveChangesToUser(user);
 
         return "redirect:/";
     }
@@ -85,7 +86,7 @@ public class PostController {
     @ResponseBody
     public LikeDto likePost(@RequestParam("id") Integer postId) {
 
-        Post post = postRepository.findById(postId).get();
+        Post post = postService.getPostById(postId);
         User user = sessionService.getLoggedUser();
         List<User> postLikedBy = post.getLikedBy();
 
@@ -100,7 +101,7 @@ public class PostController {
         }
 
         post.setLikedBy(postLikedBy);
-        postRepository.save(post);
+        postService.savePost(post);
 
         if (liked){
             return new LikeDto(true, postLikedBy.size());
@@ -110,21 +111,21 @@ public class PostController {
     }
 
     @PostMapping("/delete")
-    private String deletePost(@RequestParam("id") Integer postId){
+    public String deletePost(@RequestParam("id") Integer postId){
 
-        Post postToDelete = postRepository.findById(postId).get();
+        Post postToDelete = postService.getPostById(postId);
 
         if (postToDelete.getUser() == sessionService.getLoggedUser()){
-            User user = userRepository.findById(postToDelete.getUser().getId()).get();
-            Upload upload = uploadRepository.findById(postToDelete.getUploadFile().getId()).get();
+            User user = userService.getUserById(postToDelete.getUser().getId());
+            Upload upload = uploadService.getUploadById(postToDelete.getUploadFile().getId());
 
             List<Post> allUserPosts = user.getPosts();
             allUserPosts.remove(postToDelete);
             user.setPosts(allUserPosts);
 
-            userRepository.save(user);
-            postRepository.delete(postToDelete);
-            uploadRepository.delete(upload);
+            userService.saveChangesToUser(user);
+            postService.deletePost(postToDelete);
+            uploadService.deleteUpload(upload);
 
             return "redirect:/";
         }
@@ -135,9 +136,9 @@ public class PostController {
 
     @PostMapping("/edit")
     @ResponseBody
-    private PostEditDto editPost(@ModelAttribute PostEditDto postEditDto){
+    public PostEditDto editPost(@ModelAttribute PostEditDto postEditDto){
 
-        Post postToEdit = postRepository.findById(postEditDto.getId()).get();
+        Post postToEdit = postService.getPostById(postEditDto.getId());
 
         if (sessionService.getLoggedUser() == postToEdit.getUser()){
             postToEdit.setDescription(postEditDto.getDesc());
@@ -147,7 +148,7 @@ public class PostController {
             postToEdit.setUploadFile(postToEdit.getUploadFile());
             postToEdit.setUser(postToEdit.getUser());
 
-            postRepository.save(postToEdit);
+            postService.savePost(postToEdit);
 
             return postEditDto;
         }

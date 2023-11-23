@@ -3,13 +3,7 @@ package com.claudiusava.WellFB.controller;
 import com.claudiusava.WellFB.dto.ChangePasswordDto;
 import com.claudiusava.WellFB.dto.FollowUserDto;
 import com.claudiusava.WellFB.model.*;
-import com.claudiusava.WellFB.repository.AvatarRepository;
-import com.claudiusava.WellFB.repository.PostRepository;
-import com.claudiusava.WellFB.repository.RoleRepository;
-import com.claudiusava.WellFB.repository.UserRepository;
-import com.claudiusava.WellFB.service.SessionService;
-import com.claudiusava.WellFB.service.UserService;
-import com.claudiusava.WellFB.service.UserStatusService;
+import com.claudiusava.WellFB.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +17,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static com.claudiusava.WellFB.WellFbApplication.*;
 import static com.claudiusava.WellFB.security.SecurityConfiguration.passwordEncoder;
@@ -31,30 +24,29 @@ import static com.claudiusava.WellFB.security.SecurityConfiguration.passwordEnco
 @Controller
 @RequestMapping("/users")
 public class UserController {
-
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PostRepository postRepository;
-    @Autowired
-    private AvatarRepository avatarRepository;
     @Autowired
     private SessionService sessionService;
     @Autowired
     private UserService userService;
     @Autowired
     private UserStatusService userStatusService;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private AvatarService avatarService;
+    @Autowired
+    private PostService postService;
+
+    private static final String USER_EDIT_REDIRECT = "redirect:/users/edit?username=";
 
     @PostMapping("/new")
-    private String newUser(@ModelAttribute User user){
+    public String newUser(@ModelAttribute User user){
 
         User userToDb = new User();
         userToDb.setUsername(user.getUsername());
         userToDb.setPassword(passwordEncoder().encode(user.getPassword()));
 
-        Role roles = roleRepository.findByName("ROLE_USER").get();
+        Role roles = roleService.getRoleByName("ROLE_USER");
         userToDb.setRoles(Collections.singleton(roles));
 
         userToDb.setPosts(null);
@@ -63,11 +55,11 @@ public class UserController {
 
         Avatar userAvatar = new Avatar();
         userAvatar.setFileName("/avatars/default_avatar_100.png");
-        avatarRepository.save(userAvatar);
+        avatarService.saveAvatar(userAvatar);
 
         userToDb.setAvatar(userAvatar);
 
-        userRepository.save(userToDb);
+        userService.saveChangesToUser(userToDb);
 
         return "redirect:/login";
     }
@@ -82,15 +74,13 @@ public class UserController {
             return "redirect:/users/?username=" + loggedUser.getUsername();
         }
 
-        Optional<User> userOptional = userRepository.findByUsername(username);
+        User user = userService.getUserByUsername(username);
 
-        if(userOptional.isEmpty()){
+        if(user == null){
             return "redirect:/error?userNotFound";
         }
 
-        User user = userOptional.get();
-
-        Iterable<Post> postsByUser = postRepository.findAllByUser(user);
+        Iterable<Post> postsByUser = postService.getAllPostsByUser(user);
 
         model.addAttribute("allPostsByUser", postsByUser);
         model.addAttribute("username", username);
@@ -102,7 +92,7 @@ public class UserController {
     }
 
     @GetMapping("/edit")
-    private String editUserPage(Model model,
+    public String editUserPage(Model model,
                                 @RequestParam(value = "username", required = false) String username,
                                 RedirectAttributes redirectAttributes){
 
@@ -124,7 +114,7 @@ public class UserController {
     }
 
     @PostMapping("/pswd")
-    private String changePassword(@ModelAttribute ChangePasswordDto changePasswordDto){
+    public String changePassword(@ModelAttribute ChangePasswordDto changePasswordDto){
 
         User loggedUser = sessionService.getLoggedUser();
 
@@ -133,27 +123,26 @@ public class UserController {
             if (changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmNewPassword())){
 
                 loggedUser.setPassword(passwordEncoder().encode(changePasswordDto.getNewPassword()));
-                userRepository.save(loggedUser);
+                userService.saveChangesToUser(loggedUser);
 
             } else {
-                return "redirect:/users/edit?username=" + loggedUser.getUsername() + "&passwordDoesNotMatch";
+                return USER_EDIT_REDIRECT + loggedUser.getUsername() + "&passwordDoesNotMatch";
             }
 
         } else {
-            return "redirect:/users/edit?username=" + loggedUser.getUsername() + "&wrongPassword";
+            return USER_EDIT_REDIRECT + loggedUser.getUsername() + "&wrongPassword";
         }
-        return "redirect:/users/edit?username=" + loggedUser.getUsername() + "&success";
+        return USER_EDIT_REDIRECT + loggedUser.getUsername() + "&success";
     }
 
 
     @PostMapping("/changeAvatar")
-    private String changeAvatar(RedirectAttributes redirectAttributes,
-                                @RequestParam("avatar") MultipartFile avatar) throws IOException{
+    public String changeAvatar(@RequestParam("avatar") MultipartFile avatar) throws IOException{
 
         User loggedUser = sessionService.getLoggedUser();
 
         if (avatar.getOriginalFilename().isEmpty()) {
-            return "redirect:/users/edit?username=" + loggedUser.getUsername() + "&noNewAvatar";
+            return USER_EDIT_REDIRECT + loggedUser.getUsername() + "&noNewAvatar";
         }
 
         Avatar oldAvatar = loggedUser.getAvatar();
@@ -165,20 +154,20 @@ public class UserController {
 
         Avatar userAvatar = new Avatar();
         userAvatar.setFileName(AVATAR_BASE + fileName);
-        avatarRepository.save(userAvatar);
+        avatarService.saveAvatar(userAvatar);
 
         loggedUser.setAvatar(userAvatar);
 
-        userRepository.save(loggedUser);
+        userService.saveChangesToUser(loggedUser);
 
-        avatarRepository.delete(oldAvatar);
+        avatarService.deleteOldAvatar(oldAvatar);
 
-        return "redirect:/users/edit?username=" + loggedUser.getUsername() + "&success";
+        return USER_EDIT_REDIRECT + loggedUser.getUsername() + "&success";
     }
 
     @PostMapping("/followUser")
     @ResponseBody
-    private FollowUserDto followUser(@RequestParam("id") Integer id){
+    public FollowUserDto followUser(@RequestParam("id") Integer id){
 
         User loggedUser = sessionService.getLoggedUser();
         User userWhoGetsFollowed = userService.getUserById(id);
@@ -190,7 +179,7 @@ public class UserController {
         List<User> loggedUserFollowsList = loggedUser.getFollows();
         List<User> userWhoGetsFollowedFollowedByList = userWhoGetsFollowed.getFollowedBy();
 
-        Boolean isFollowing = false;
+        boolean isFollowing = false;
 
         if(loggedUser.getFollows().contains(userWhoGetsFollowed)){
             loggedUserFollowsList.remove(userWhoGetsFollowed);
