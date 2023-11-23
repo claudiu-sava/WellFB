@@ -20,7 +20,7 @@
             Action completed successfully!
         </div>
 
-        <div th:if="${param.wrongPassword}" class="alert alert-danger" role="alert">
+        <div th:if="${param.wrongPassword}" class="alert alert-warning" role="alert">
             Please enter your old password correctly!
         </div>
 
@@ -42,6 +42,10 @@
 </div>
 
 <div class="mt-5">
+    <div th:if="${param.noNewAvatar}" class="alert alert-warning" role="alert">
+        Please select a file as avatar!
+    </div>
+
     <form method="post" th:action="@{/users/changeAvatar}" enctype="multipart/form-data">
 
         <h3>Change Avatar</h3>
