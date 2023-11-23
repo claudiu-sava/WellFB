@@ -86,4 +86,16 @@ $( document ).ready(function() {
         $("#postEditModalHiddenInput").val(postId);
         $("#postEditModalEditButton").attr("id", postId);
     });
+
+
+    var height = $( 'footer' ).height();
+    var windowHeight = $(window).height();
+    var bodyHeight = $('body').height();
+    console.log(windowHeight);
+    console.log(bodyHeight);
+    if (windowHeight > bodyHeight){
+        $('footer').addClass("fixed-bottom");
+    } else {
+        $('body').css('margin-bottom',height + 'px');
+    }
 });
