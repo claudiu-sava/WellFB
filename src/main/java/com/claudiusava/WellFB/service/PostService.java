@@ -6,6 +6,7 @@ import com.claudiusava.WellFB.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,15 +38,15 @@ public class PostService {
 
     }
 
-    public Iterable<Post> getAllPosts(){
+    public List<Post> getAllPostsByUser(User user){
 
-        return postRepository.findAll();
+        return postRepository.findAllByUser(user);
 
     }
 
-    public Iterable<Post> getAllPostsByUser(User user){
+    public Iterable<Post> getAllPostsDesc(){
 
-        return postRepository.findAllByUser(user);
+        return postRepository.findAllByOrderByDateDesc();
 
     }
 }

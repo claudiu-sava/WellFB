@@ -28,7 +28,6 @@
       <button type="submit" th:if="${user.getFollowedBy().contains(loggedUser)}" th:id="${user.getId()}" onclick="followUser(this.id)" class="btn btn-primary mx-1">Followed</button>
       <button type="submit" th:unless="${user.getFollowedBy().contains(loggedUser)}" th:id="${user.getId()}" onclick="followUser(this.id)" class="btn btn-secondary mx-1">Follow</button>
     </div>
-    <button type="button" class="btn btn-primary mx-1">Message</button>
     <hr>
   </div>
 </div>

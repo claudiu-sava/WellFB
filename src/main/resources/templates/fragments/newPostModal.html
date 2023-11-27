@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div th:replace="~{/fragments/head :: head}"></div>
+
+<div th:fragment="modal">
+  <div class="modal fade" id="newPostModal" tabindex="-1" role="dialog" aria-labelledby="newPostModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newPostModalLabel">New Post</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="newPostModelForm" th:action="@{/post/new}" enctype="multipart/form-data">
+
+            <div class="form-group">
+
+              <div id="newPostModalAlert" class="alert alert-warning" role="alert">
+                Your post needs to contain a picture
+              </div>
+
+              <input id="newPostModalFileInput" type="file" name="upload" accept="image/*" class="form-control-file">
+              <label for="description" class="mt-2">Description</label>
+              <input type="text" class="form-control" id="description" name="description" placeholder="Description">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="newPostModalPostButton" th:onclick="checkNewPostModal()">Create Post</button>
+            </div>
+          </form>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>

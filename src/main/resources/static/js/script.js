@@ -69,6 +69,19 @@ function followUser(id){
         });
 }
 
+$('#newPostModal').on('show.bs.modal', function (e) {
+    //get data-id attribute of the clicked element
+    $('#newPostModalAlert').hide();
+});
+
+function checkNewPostModal(){
+    if ($('#newPostModalFileInput').get(0).files.length !== 0) {
+        $('#newPostModelForm').submit();
+    } else {
+        $('#newPostModalAlert').show();
+    }
+}
+
 $( document ).ready(function() {
     $('#postDeleteModal').on('show.bs.modal', function (e) {
         //get data-id attribute of the clicked element
@@ -86,4 +99,16 @@ $( document ).ready(function() {
         $("#postEditModalHiddenInput").val(postId);
         $("#postEditModalEditButton").attr("id", postId);
     });
+
+
+    var height = $( 'footer' ).height();
+    var windowHeight = $(window).height();
+    var bodyHeight = $('body').height();
+    console.log(windowHeight);
+    console.log(bodyHeight);
+    if (windowHeight > bodyHeight){
+        $('footer').addClass("fixed-bottom");
+    } else {
+        $('body').css('margin-bottom',height + 'px');
+    }
 });

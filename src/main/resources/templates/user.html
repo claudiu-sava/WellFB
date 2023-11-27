@@ -13,7 +13,7 @@
 
 
 <div class="container mt-5">
-    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <div th:if="${!allPostsByUser.isEmpty()}" id="myCarousel" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->
         <ol class="carousel-indicators">
             <li th:each="post, iterStat : ${allPostsByUser}" th:attr="data-target='#myCarousel', data-slide-to=${iterStat.index}" th:class="${iterStat.index == 0} ? 'active' : ''"></li>
@@ -46,7 +46,11 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
+    <div th:unless="${!allPostsByUser.isEmpty()}" class="justify-content-center align-items-center">
+        <img th:src="@{/drawable/post_illustration.png}" alt="Image" class="img-fluid">
+    </div>
 </div>
 
+<div th:insert="~{/fragments/footer :: footer}"></div>
 </body>
 </html>

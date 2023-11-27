@@ -12,7 +12,6 @@ import com.claudiusava.WellFB.service.UploadService;
 import com.claudiusava.WellFB.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,24 +36,9 @@ public class PostController {
     @Autowired
     private UploadService uploadService;
 
-    @GetMapping("/new")
-    public String newPostPage(Model model){
-
-        User loggedUser = sessionService.getLoggedUser();
-        model.addAttribute("loggedUser", loggedUser);
-        model.addAttribute("title", "Add new post");
-
-        return "newPost";
-
-    }
-
     @PostMapping("/new")
     public String newPost(@ModelAttribute Post post,
                            @RequestParam(value = "upload", required = false) MultipartFile upload) throws IOException {
-
-        if(upload.getOriginalFilename().isEmpty()){
-            return "redirect:/post/new?error";
-        }
 
         StringBuilder fileName = new StringBuilder();
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, upload.getOriginalFilename());
