@@ -2,8 +2,6 @@ package com.claudiusava.WellFB.controller;
 
 import com.claudiusava.WellFB.model.Post;
 import com.claudiusava.WellFB.model.User;
-import com.claudiusava.WellFB.repository.PostRepository;
-import com.claudiusava.WellFB.repository.UserRepository;
 import com.claudiusava.WellFB.service.PostService;
 import com.claudiusava.WellFB.service.SessionService;
 import com.claudiusava.WellFB.service.UserService;
