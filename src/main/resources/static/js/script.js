@@ -69,6 +69,19 @@ function followUser(id){
         });
 }
 
+$('#newPostModal').on('show.bs.modal', function (e) {
+    //get data-id attribute of the clicked element
+    $('#newPostModalAlert').hide();
+});
+
+function checkNewPostModal(){
+    if ($('#newPostModalFileInput').get(0).files.length !== 0) {
+        $('#newPostModelForm').submit();
+    } else {
+        $('#newPostModalAlert').show();
+    }
+}
+
 $( document ).ready(function() {
     $('#postDeleteModal').on('show.bs.modal', function (e) {
         //get data-id attribute of the clicked element
