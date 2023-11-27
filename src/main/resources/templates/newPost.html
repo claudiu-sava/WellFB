@@ -8,6 +8,11 @@
     <form method="post" th:action="@{/post/new}" enctype="multipart/form-data">
 
         <div class="form-group">
+
+            <div th:if="${param.error}" class="alert alert-warning" role="alert">
+                Your post needs to contain a picture
+            </div>
+
             <input type="file" name="upload" accept="image/*" class="form-control-file">
             <label for="description">Description</label>
             <input type="text" class="form-control" id="description" name="description" placeholder="Description">
@@ -16,5 +21,6 @@
         <button type="submit" class="btn btn-primary mt-1">Create Post</button>
     </form>
 
+    <div th:insert="~{/fragments/footer :: footer}"></div>
     </body>
 </html>

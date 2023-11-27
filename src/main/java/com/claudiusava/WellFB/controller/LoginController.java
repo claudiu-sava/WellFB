@@ -13,16 +13,9 @@ import javax.naming.AuthenticationException;
 public class LoginController {
 
     @GetMapping("/login")
-    public String loginPage(Model model,
-                            HttpServletRequest request){
+    public String loginPage(Model model){
 
         model.addAttribute("title", "Login");
-
-        String err = request.getParameter("error");
-
-        if(err != null){
-            System.out.println(err);
-        }
 
         return "login";
 

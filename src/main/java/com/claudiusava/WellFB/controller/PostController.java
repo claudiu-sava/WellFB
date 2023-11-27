@@ -5,13 +5,13 @@ import com.claudiusava.WellFB.dto.PostEditDto;
 import com.claudiusava.WellFB.model.Post;
 import com.claudiusava.WellFB.model.Upload;
 import com.claudiusava.WellFB.model.User;
-import com.claudiusava.WellFB.repository.PostRepository;
-import com.claudiusava.WellFB.repository.UploadRepository;
-import com.claudiusava.WellFB.repository.UserRepository;
-import com.claudiusava.WellFB.service.Session;
+
+import com.claudiusava.WellFB.service.PostService;
+import com.claudiusava.WellFB.service.SessionService;
+import com.claudiusava.WellFB.service.UploadService;
+import com.claudiusava.WellFB.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,28 +28,17 @@ import static com.claudiusava.WellFB.WellFbApplication.UPLOAD_DIRECTORY;
 @RequestMapping("/post")
 public class PostController {
     @Autowired
-    private Session session;
+    private SessionService sessionService;
     @Autowired
-    private PostRepository postRepository;
+    private PostService postService;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @Autowired
-    private UploadRepository uploadRepository;
-
-    @GetMapping("/new")
-    private String newPostPage(Model model){
-
-        User loggedUser = session.getLoggedUser();
-        model.addAttribute("loggedUser", loggedUser);
-        model.addAttribute("title", "Add new post");
-
-        return "newPost";
-
-    }
+    private UploadService uploadService;
 
     @PostMapping("/new")
-    private String newPost(@ModelAttribute Post post,
-                           @RequestParam("upload") MultipartFile upload) throws IOException {
+    public String newPost(@ModelAttribute Post post,
+                           @RequestParam(value = "upload", required = false) MultipartFile upload) throws IOException {
 
         StringBuilder fileName = new StringBuilder();
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, upload.getOriginalFilename());
@@ -59,21 +48,20 @@ public class PostController {
         Upload uploadToDb = new Upload();
         uploadToDb.setFileName(UPLOAD_BASE + fileName);
 
-        uploadRepository.save(uploadToDb);
+        uploadService.saveUpload(uploadToDb);
 
         Post postToDb = new Post();
         postToDb.setLikedBy(null);
         postToDb.setDescription(post.getDescription());
         postToDb.setUploadFile(uploadToDb);
 
-        User user = session.getLoggedUser();
+        User user = sessionService.getLoggedUser();
         List<Post> userPost = user.getPosts();
         postToDb.setUser(user);
         userPost.add(postToDb);
 
-
-        postRepository.save(postToDb);
-        userRepository.save(user);
+        postService.savePost(postToDb);
+        userService.saveChangesToUser(user);
 
         return "redirect:/";
     }
@@ -82,8 +70,8 @@ public class PostController {
     @ResponseBody
     public LikeDto likePost(@RequestParam("id") Integer postId) {
 
-        Post post = postRepository.findById(postId).get();
-        User user = session.getLoggedUser();
+        Post post = postService.getPostById(postId);
+        User user = sessionService.getLoggedUser();
         List<User> postLikedBy = post.getLikedBy();
 
         boolean liked = false;
@@ -97,7 +85,7 @@ public class PostController {
         }
 
         post.setLikedBy(postLikedBy);
-        postRepository.save(post);
+        postService.savePost(post);
 
         if (liked){
             return new LikeDto(true, postLikedBy.size());
@@ -107,40 +95,50 @@ public class PostController {
     }
 
     @PostMapping("/delete")
-    private String deletePost(@RequestParam("id") Integer postId){
+    public String deletePost(@RequestParam("id") Integer postId){
 
-        Post postToDelete = postRepository.findById(postId).get();
-        User user = userRepository.findById(postToDelete.getUser().getId()).get();
-        Upload upload = uploadRepository.findById(postToDelete.getUploadFile().getId()).get();
+        Post postToDelete = postService.getPostById(postId);
 
-        List<Post> allUserPosts = user.getPosts();
-        allUserPosts.remove(postToDelete);
-        user.setPosts(allUserPosts);
+        if (postToDelete.getUser() == sessionService.getLoggedUser()){
+            User user = userService.getUserById(postToDelete.getUser().getId());
+            Upload upload = uploadService.getUploadById(postToDelete.getUploadFile().getId());
 
-        userRepository.save(user);
-        postRepository.delete(postToDelete);
-        uploadRepository.delete(upload);
-        System.out.println("Post deleted");
-        
-        return "redirect:/";
+            List<Post> allUserPosts = user.getPosts();
+            allUserPosts.remove(postToDelete);
+            user.setPosts(allUserPosts);
+
+            userService.saveChangesToUser(user);
+            postService.deletePost(postToDelete);
+            uploadService.deleteUpload(upload);
+
+            return "redirect:/";
+        }
+
+        return "redirect:/error?somethingWentWrong";
+
     }
 
     @PostMapping("/edit")
     @ResponseBody
-    private PostEditDto editPost(@ModelAttribute PostEditDto postEditDto){
+    public PostEditDto editPost(@ModelAttribute PostEditDto postEditDto){
 
-        Post postToEdit = postRepository.findById(postEditDto.getId()).get();
+        Post postToEdit = postService.getPostById(postEditDto.getId());
 
-        postToEdit.setDescription(postEditDto.getDesc());
-        postToEdit.setId(postToEdit.getId());
-        postToEdit.setDate(postToEdit.getDate());
-        postToEdit.setLikedBy(postToEdit.getLikedBy());
-        postToEdit.setUploadFile(postToEdit.getUploadFile());
-        postToEdit.setUser(postToEdit.getUser());
+        if (sessionService.getLoggedUser() == postToEdit.getUser()){
+            postToEdit.setDescription(postEditDto.getDesc());
+            postToEdit.setId(postToEdit.getId());
+            postToEdit.setDate(postToEdit.getDate());
+            postToEdit.setLikedBy(postToEdit.getLikedBy());
+            postToEdit.setUploadFile(postToEdit.getUploadFile());
+            postToEdit.setUser(postToEdit.getUser());
 
-        postRepository.save(postToEdit);
+            postService.savePost(postToEdit);
 
-        return postEditDto;
+            return postEditDto;
+        }
+
+        return postEditDto; // unchanged post
+
     }
 
 }

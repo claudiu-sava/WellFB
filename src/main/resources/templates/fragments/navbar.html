@@ -3,15 +3,18 @@
 
 <body>
 <div th:replace="~{/fragments/head :: head}"></div>
+
 <header th:fragment="header(loggeduser)">
+    <div th:insert="~{/fragments/newPostModal :: modal}"></div>
+
 
     <nav class="navbar navbar-light bg-light justify-content-between">
         <a class="navbar-brand" th:href="@{/}">WellFB</a>
 
-        <form class="form-inline" method="get" th:action="@{/users/}">
-            <a th:href="@{/post/new}">
-                <button type="button" class="btn btn-outline-primary mr-3">New Post</button>
-            </a>
+        <form class="form-inline" method="get" th:action="@{/users/search}">
+
+            <button th:if="${loggeduser != null}" type="button" data-toggle="modal" data-target="#newPostModal" class="btn btn-outline-primary mr-3">New Post</button>
+
 
             <input class="form-control mr-sm-2" type="search" name="username" placeholder="Search for User" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
@@ -19,8 +22,8 @@
             <div class="ml-5">
 
                 <div th:if="${loggeduser != null}" class="btn-group">
-                    <a th:href="@{/users/}">
-                        <img th:src="@{${loggeduser.getAvatar().getFileName()}}" alt="user" class="img-fluid profile-pic-icon">
+                    <a th:href="@{'/users/?username=' + ${loggeduser.getUsername()}}">
+                        <img th:src="@{${loggeduser.getAvatar().getFileName()}}" alt="user" class="profile-pic-icon">
                     </a>
 
                     <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -37,7 +40,7 @@
 
                 <div th:unless="${loggeduser != null}" class="btn-group">
                     <a th:href="@{/users/}">
-                        <img th:src="@{/avatars/default_avatar_100.png}" alt="user" class="img-fluid profile-pic-icon">
+                        <img th:src="@{/avatars/default_avatar_100.png}" alt="user" class="profile-pic-icon">
                     </a>
                 </div>
 

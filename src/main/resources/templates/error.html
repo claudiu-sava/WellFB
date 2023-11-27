@@ -4,7 +4,22 @@
 <div th:replace="~{/fragments/navbar :: header(${null})}"></div>
 <div th:replace="~{/fragments/head :: head}"></div>
 
+<div th:if="${param.userNotFound}" class="h-100 d-flex justify-content-center">
+    <img th:src="@{/drawable/userNotFound_illustration.png}" alt="user" >
+    <h2>No user found</h2>
+</div>
+
+<div th:if="${param.somethingWentWrong}" class="h-100 d-flex justify-content-center">
+    <img th:src="@{/drawable/somethingWentWrong_illustration.png}" alt="user" >
+    <h2>Something went wrong...</h2>
+</div>
+
+<div th:if="${param.error404}" class="h-100 d-flex justify-content-center">
+    <img th:src="@{/drawable/404_illustration.png}" alt="user" >
+    <h2>This page doesnt exist</h2>
+</div>
 
 
+<div th:insert="~{/fragments/footer :: footer}"></div>
 </body>
 </html>

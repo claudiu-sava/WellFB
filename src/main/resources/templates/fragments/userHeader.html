@@ -2,9 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div th:fragment="userHeader(user, loggedUser)" class="container-fluid ">
+<div th:fragment="userHeader(user, loggedUser, userStatusService)" class="container-fluid ">
   <div class="d-flex align-items-center">
     <div>
+      <img th:if="${userStatusService.isUserOnline(user)}" th:src="@{/drawable/status_icon_48.png}" alt="user" class="img-fluid status-icon-big">
       <img th:src="@{${user.getAvatar().getFileName()}}" alt="Avatar" class="profile-pic-big">
     </div>
     <div class="ml-3">
@@ -27,7 +28,6 @@
       <button type="submit" th:if="${user.getFollowedBy().contains(loggedUser)}" th:id="${user.getId()}" onclick="followUser(this.id)" class="btn btn-primary mx-1">Followed</button>
       <button type="submit" th:unless="${user.getFollowedBy().contains(loggedUser)}" th:id="${user.getId()}" onclick="followUser(this.id)" class="btn btn-secondary mx-1">Follow</button>
     </div>
-    <button type="button" class="btn btn-primary mx-1">Message</button>
     <hr>
   </div>
 </div>
