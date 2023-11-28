@@ -4,6 +4,7 @@ import com.claudiusava.WellFB.dto.ChangePasswordDto;
 import com.claudiusava.WellFB.dto.FollowUserDto;
 import com.claudiusava.WellFB.model.*;
 import com.claudiusava.WellFB.service.*;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -152,6 +154,8 @@ public class UserController {
         fileName.append(avatar.getOriginalFilename());
         Files.write(fileNameAndPath, avatar.getBytes());
 
+        Thumbnails.of(fileNameAndPath.toString()).size(150, 150).outputQuality(1.0).toFile(fileNameAndPath.toString());
+
         Avatar userAvatar = new Avatar();
         userAvatar.setFileName(AVATAR_BASE + fileName);
         avatarService.saveAvatar(userAvatar);
@@ -161,6 +165,9 @@ public class UserController {
         userService.saveChangesToUser(loggedUser);
 
         avatarService.deleteOldAvatar(oldAvatar);
+
+        File oldAvatarFileFromHdd = new File(oldAvatar.getFileName());
+        oldAvatarFileFromHdd.delete();
 
         return USER_EDIT_REDIRECT + loggedUser.getUsername() + "&success";
     }
