@@ -10,11 +10,13 @@ import com.claudiusava.WellFB.service.PostService;
 import com.claudiusava.WellFB.service.SessionService;
 import com.claudiusava.WellFB.service.UploadService;
 import com.claudiusava.WellFB.service.UserService;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,6 +49,8 @@ public class PostController {
 
         Upload uploadToDb = new Upload();
         uploadToDb.setFileName(UPLOAD_BASE + fileName);
+
+        Thumbnails.of(fileNameAndPath.toString()).size(1200, 800).outputQuality(1.0).toFile(fileNameAndPath.toString());
 
         uploadService.saveUpload(uploadToDb);
 
@@ -110,6 +114,9 @@ public class PostController {
             userService.saveChangesToUser(user);
             postService.deletePost(postToDelete);
             uploadService.deleteUpload(upload);
+
+            File postToDeleteFromHdd = new File(postToDelete.getUploadFile().getFileName());
+            postToDeleteFromHdd.delete();
 
             return "redirect:/";
         }
