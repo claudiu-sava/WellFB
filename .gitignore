@@ -27,3 +27,4 @@ replay_pid*
 target/**
 src/main/resources/uploads
 src/main/resources/avatars
+src/main/resources/hq
