@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<tr th:each="comment: ${comments}">
+    <td>
+        <div class="d-flex justify-content-center align-items-center" role="group">
+            <img alt="user" th:src="@{${comment.getUser().getAvatar().getFileName()}}" class="profile-pic-icon-tiny">
+            <h4 class="my-3 ml-3 username" th:text="${comment.getUser().getUsername()}"></h4>
+        </div>
+        <p th:text="${comment.getComment()}"></p>
+    </td>
+</tr>
+</body>
+</html>

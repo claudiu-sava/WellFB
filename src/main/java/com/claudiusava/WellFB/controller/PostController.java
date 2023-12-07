@@ -1,18 +1,20 @@
 package com.claudiusava.WellFB.controller;
 
 import com.claudiusava.WellFB.dto.LikeDto;
+import com.claudiusava.WellFB.dto.ModalPostDto;
+import com.claudiusava.WellFB.dto.NewPostDto;
 import com.claudiusava.WellFB.dto.PostEditDto;
+import com.claudiusava.WellFB.model.Comment;
 import com.claudiusava.WellFB.model.Post;
 import com.claudiusava.WellFB.model.Upload;
 import com.claudiusava.WellFB.model.User;
 
-import com.claudiusava.WellFB.service.PostService;
-import com.claudiusava.WellFB.service.SessionService;
-import com.claudiusava.WellFB.service.UploadService;
-import com.claudiusava.WellFB.service.UserService;
+import com.claudiusava.WellFB.service.*;
 import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.name.Rename;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,10 +23,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 
-import static com.claudiusava.WellFB.WellFbApplication.UPLOAD_BASE;
-import static com.claudiusava.WellFB.WellFbApplication.UPLOAD_DIRECTORY;
+import static com.claudiusava.WellFB.WellFbApplication.*;
 
 @Controller
 @RequestMapping("/post")
@@ -37,20 +39,23 @@ public class PostController {
     private UserService userService;
     @Autowired
     private UploadService uploadService;
+    @Autowired
+    private CommentService commentService;
 
     @PostMapping("/new")
     public String newPost(@ModelAttribute Post post,
                            @RequestParam(value = "upload", required = false) MultipartFile upload) throws IOException {
 
         StringBuilder fileName = new StringBuilder();
-        Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, upload.getOriginalFilename());
+        Path fileNameAndPath = Paths.get(HQ_UPLOAD_DIRECTORY, upload.getOriginalFilename());
         fileName.append(upload.getOriginalFilename());
         Files.write(fileNameAndPath, upload.getBytes());
 
         Upload uploadToDb = new Upload();
         uploadToDb.setFileName(UPLOAD_BASE + fileName);
+        uploadToDb.setHqFileName(HQ_UPLOAD_BASE + fileName);
 
-        Thumbnails.of(fileNameAndPath.toString()).size(1200, 800).outputQuality(1.0).toFile(fileNameAndPath.toString());
+        Thumbnails.of(fileNameAndPath.toString()).size(1200, 800).outputQuality(1.0).toFiles(new File(UPLOAD_DIRECTORY), Rename.NO_CHANGE);
 
         uploadService.saveUpload(uploadToDb);
 
@@ -146,6 +151,65 @@ public class PostController {
 
         return postEditDto; // unchanged post
 
+    }
+
+    @GetMapping("/getPost")
+    @ResponseBody
+    public ModalPostDto getPostById(@RequestParam("id") int id){
+
+        Post post = postService.getPostById(id);
+        ModalPostDto modalPostDto = new ModalPostDto();
+        modalPostDto.setPostDesc(post.getDescription());
+        modalPostDto.setUser(post.getUser().getUsername());
+        modalPostDto.setAvatar(post.getUser().getAvatar().getFileName());
+        modalPostDto.setHqUpload(post.getUploadFile().getHqFileName());
+        modalPostDto.setPostId(post.getId().toString());
+        if(post.getUser() == sessionService.getLoggedUser()){
+            modalPostDto.setUserAuthor(true);
+        } else {
+            modalPostDto.setUserAuthor(false);
+        }
+
+
+        if(post.getLikedBy().contains(sessionService.getLoggedUser())){
+            modalPostDto.setHasUserLiked(true);
+        } else {
+            modalPostDto.setHasUserLiked(false);
+        }
+
+        return modalPostDto;
+
+    }
+
+    @PostMapping("/comment")
+    @ResponseBody
+    public String postComment(@RequestBody NewPostDto newPostDto){
+
+        Post post = postService.getPostById(newPostDto.getPostId());
+
+
+        Comment comment = new Comment();
+        comment.setComment(newPostDto.getCommentBody());
+        comment.setUser(sessionService.getLoggedUser());
+
+        commentService.saveComment(comment);
+
+        postService.addComment(post, comment);
+        postService.savePost(post);
+
+        return "success";
+    }
+
+    @GetMapping("/getComments")
+    public String getComments(@RequestParam("id") int id,
+                              Model model){
+
+        Post post = postService.getPostById(id);
+        List<Comment> comments = post.getComments();
+        Collections.reverse(comments);
+
+        model.addAttribute("comments", comments);
+        return "/fragments/comments";
     }
 
 }
