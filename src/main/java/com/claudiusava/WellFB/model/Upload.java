@@ -16,4 +16,6 @@ public class Upload {
     @Column(nullable = false)
     private String fileName;
 
+    private String hqFileName;
+
 }
