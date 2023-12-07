@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div th:replace="~{/fragments/head :: head}"></div>
+
+<div th:fragment="postModal">
+
+    <div th:id="postModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-full modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <div th:insert="~{/fragments/usernameAndAvatarPost :: usernameAndAvatarForModal}"></div>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-9 text-center">
+                                <img alt="image" class="img-fluid image">
+                            </div>
+
+                            <div class="col-md-1 align-self-center">
+                                <button type="button" onclick="likePost(this.id)" class="btn btn-link likeButton">
+                                    <img class="like-icon" th:src="@{/drawable/like_icon_50.png}" alt="like" >
+                                </button>
+
+                                <button type="button" class="btn btn-link editButton" data-toggle="modal" data-target="#postEditModal">
+                                    <img th:src="@{/drawable/edit_icon_50.png}" alt="edit">
+                                </button>
+
+                                <button type="button" class="btn btn-link deleteButton" data-toggle="modal" data-target="#postDeleteModal">
+                                    <img th:src="@{/drawable/remove_icon_50.png}" alt="remove post">
+                                </button>
+
+
+                            </div>
+
+                            <div class="col-md-2" style="position: relative;">
+
+                                <div class="postModalDescArea">
+                                    <h5 class="postModalDesc postDesc"></h5>
+                                </div>
+
+                                <div class="comments-scroll-modal" id="commentSection">
+
+
+
+                                </div>
+
+
+
+                                <div class="input-group postModalSendMessageArea" style="position: absolute; bottom: 0;">
+
+                                    <input type="text" class="form-control"  placeholder="Comment...">
+                                    <button type="button" class="btn btn-link send-comment-button" onclick="addComment()">
+                                        <img th:src="@{/drawable/send_icon_24.png}" alt="send">
+                                    </button>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="usernameAndAvatar(post)" class="d-flex justify-content-center align-items-center" role="group">
+  <img th:src="@{${post.getUser().getAvatar().getFileName()}}" alt="user" class="profile-pic-icon">
+  <h2 class="my-3 ml-3" th:text="${post.getUser().getUsername()}"></h2>
+</div>
+
+<div th:fragment="usernameAndAvatarForModal">
+  <div class="d-flex justify-content-center align-items-center" role="group">
+    <img alt="user" class="profile-pic-icon">
+    <h2 class="my-3 ml-3 username"></h2>
+  </div>
+</div>
+</body>
+</html>
