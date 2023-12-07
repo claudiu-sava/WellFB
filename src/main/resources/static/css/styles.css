@@ -19,6 +19,13 @@ table {
     height: 50px;
 }
 
+.profile-pic-icon-tiny {
+    border-radius: 50%;
+    object-fit: fill;
+    width: 25px;
+    height: 25px;
+}
+
 .profile-pic-big {
     border-radius: 50%;
     object-fit: fill;
@@ -34,4 +41,14 @@ table {
 .status-icon-big {
     max-height: 25px;
     max-width: 25px;
+}
+
+.modal-full {
+    max-width: 90% !important;
+    max-height: 100% !important;
+    margin-top: 0px !important;
+}
+
+.comments-scroll-modal {
+    overflow:scroll;
 }
