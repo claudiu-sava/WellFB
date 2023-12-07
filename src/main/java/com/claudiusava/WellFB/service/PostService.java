@@ -1,5 +1,6 @@
 package com.claudiusava.WellFB.service;
 
+import com.claudiusava.WellFB.model.Comment;
 import com.claudiusava.WellFB.model.Post;
 import com.claudiusava.WellFB.model.User;
 import com.claudiusava.WellFB.repository.PostRepository;
@@ -47,6 +48,16 @@ public class PostService {
     public Iterable<Post> getAllPostsDesc(){
 
         return postRepository.findAllByOrderByDateDesc();
+
+    }
+
+    public Post addComment(Post post, Comment comment){
+
+        List<Comment> allPostComments = post.getComments();
+        allPostComments.add(comment);
+        post.setComments(allPostComments);
+
+        return post;
 
     }
 }

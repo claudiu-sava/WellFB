@@ -18,7 +18,8 @@ public class SecurityConfiguration{
     private static final String[] user_auth = {
             "/",
             "/post/**",
-            "/uploads/**"
+            "/uploads/**",
+            "hq/**"
     };
 
     private static final String[] anon_auth = {
@@ -26,7 +27,8 @@ public class SecurityConfiguration{
             "/js/script.js",
             "/users/new",
             "/drawable/**",
-            "/avatars/default_avatar_100.png"
+            "/avatars/default_avatar_100.png",
+            "/fragments/**"
     };
 
     @Bean

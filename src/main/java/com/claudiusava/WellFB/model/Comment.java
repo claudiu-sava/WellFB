@@ -7,15 +7,15 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Upload {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
-    private String fileName;
+    private String comment;
 
-    private String hqFileName;
-
+    @ManyToOne
+    private User user;
 }

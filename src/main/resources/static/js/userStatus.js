@@ -1,5 +1,4 @@
 const interval = setInterval(function() {
-    console.log("HERE");
 
     fetch('/status', {
         method: 'GET',

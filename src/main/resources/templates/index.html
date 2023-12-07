@@ -3,8 +3,8 @@
 <body>
 <div th:replace="~{/fragments/navbar :: header(${loggedUser})}"></div>
 <div th:replace="~{/fragments/head :: head}"></div>
-<div th:insert="~{/fragments/postDeleteModal :: modal}"></div>
-<div th:insert="~{/fragments/postEditModal :: modal}"></div>
+<div th:insert="~{/fragments/postModal :: postModal}"></div>
+
 
 
 <div class="container-fluid">
@@ -17,12 +17,9 @@
                 <tr th:each="post:${allPosts}">
                     <td>
 
-                        <div class="d-flex justify-content-center align-items-center" role="group">
-                            <img th:src="@{${post.getUser().getAvatar().getFileName()}}" alt="user" class="profile-pic-icon">
-                            <h2 class="my-3 ml-3" th:text="${post.getUser().getUsername()}"></h2>
-                        </div>
+                        <div th:insert="~{/fragments/usernameAndAvatarPost :: usernameAndAvatar(${post})}"></div>
 
-                        <img th:src="@{${post.getUploadFile().getFileName()}}" alt="image" class="img-fluid vh-100 lazyload" loading="lazy">
+                        <img th:src="@{${post.getUploadFile().getFileName()}}" alt="image" class="img-fluid vh-100 lazyload" loading="lazy" th:post-id="${post.getId().toString()}" data-toggle="modal" data-target="#postModal">
                         <h5 th:id="'postDesc_' + ${post.getId().toString()}" class="text-break my-2" th:text="${post.getDescription()}"></h5>
 
                         <div th:insert="~{/fragments/postButtons :: postButtons}"></div>
@@ -58,7 +55,8 @@
         </div>
     </div>
 </div>
-
+<div th:insert="~{/fragments/postDeleteModal :: modal}"></div>
+<div th:insert="~{/fragments/postEditModal :: modal}"></div>
 <div th:insert="~{/fragments/footer :: footer}"></div>
 </body>
 </html>

@@ -15,13 +15,12 @@
           </button>
         </div>
 
-
           <div class="modal-body">
             <textarea id="postEditModalPostDesc" name="postDesc" class="form-control"></textarea>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" onclick="editPost(this.id, $('#postEditModalPostDesc').val())" id="postEditModalEditButton" data-dismiss="modal">Edit</button>
+            <button id="postEditModalEditButton" type="submit" class="btn btn-primary" onclick="editPost()" data-dismiss="modal">Edit</button>
           </div>
 
       </div>
