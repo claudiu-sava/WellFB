@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:replace="~{/fragments/navbar :: header(${loggedUser})}"></div>
+<div th:replace="~{/fragments/head :: head}"></div>
+
+<div class="container-fluid">
+    <div class="row text-center">
+        <div class="col-md-6 mt-5">
+            <!-- Left column content -->
+
+            <div class="chart">
+                <h3>Post Interaction</h3>
+                <canvas id="allPostsBar"></canvas>
+            </div>
+
+
+        </div>
+        <div class="col-md-6 mt-5 mb-1">
+            <!-- Right column content -->
+
+            <div class="chart">
+                <h3>Posts Frequency</h3>
+                <canvas id="allPostsFrequency"></canvas>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row text-center mt-5">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Post</th>
+                    <th scope="col">User</th>
+                    <th scope="col">Likes</th>
+                    <th scope="col">Comments</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Posted on</th>
+                    <th scope="col">ID</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="post : ${allPosts}">
+                    <td><img th:src="@{${post.getUploadFile().getFileName()}}" style="height: 100px; width: 150px;"></td>
+                    <td><span th:text="${post.getUser().getUsername()}"></span></td>
+                    <td><span th:text="${post.getLikedBy().size()}"></span></td>
+                    <td><span th:text="${post.getComments().size()}"></span></td>
+                    <td>
+                        <span th:id="'postDesc_' + ${post.getId()}" th:text="${post.getDescription()}"></span>
+                        <img th:id="'editButton_' + ${post.getId()}" th:src="@{/drawable/edit_icon_50.png}" style="height: 25px;" data-toggle="modal" th:post-id="${post.getId()}" th:post-desc="${post.getDescription()}" data-target="#postEditModal">
+                    </td>
+                    <td><span th:text="${post.getDate()}"></span></td>
+                    <td><span th:text="${post.getId()}"></span></td>
+                    <td>
+                        <button type="button" th:id="'deleteButton_' + ${post.getId()}" class="btn btn-link" data-toggle="modal" th:post-id="${post.getId()}" data-target="#postDeleteModal">
+                            <img th:src="@{/drawable/remove_icon_50.png}" alt="remove post">
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div th:insert="~{/fragments/postDeleteModal :: modal}"></div>
+<div th:insert="~{/fragments/postEditModal :: modal}"></div>
+<script th:src="@{/js/postRelatedCharts.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</body>
+</html>

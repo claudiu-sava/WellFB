@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.claudiusava.WellFB.WellFbApplication.*;
@@ -56,7 +57,6 @@ public class PostController {
         uploadToDb.setHqFileName(HQ_UPLOAD_BASE + fileName);
 
         Thumbnails.of(fileNameAndPath.toString()).size(1200, 800).outputQuality(1.0).toFiles(new File(UPLOAD_DIRECTORY), Rename.NO_CHANGE);
-
         uploadService.saveUpload(uploadToDb);
 
         Post postToDb = new Post();
@@ -103,14 +103,28 @@ public class PostController {
         return new LikeDto(false, postLikedBy.size());
     }
 
+    // SECURED
     @PostMapping("/delete")
     public String deletePost(@RequestParam("id") Integer postId){
 
         Post postToDelete = postService.getPostById(postId);
 
-        if (postToDelete.getUser() == sessionService.getLoggedUser()){
+        if (postToDelete.getUser() == sessionService.getLoggedUser() || sessionService.isLoggedUserAdmin()){
             User user = userService.getUserById(postToDelete.getUser().getId());
             Upload upload = uploadService.getUploadById(postToDelete.getUploadFile().getId());
+
+            List<Comment> comments = postToDelete.getComments();
+
+            try{
+                for (Comment comment : comments){
+                    comments.remove(comment);
+                    commentService.deleteComment(comment);
+                }
+            } catch (Exception e){
+                // idk why this for block loops itself one more time
+                // TODO maybe fix it?
+            }
+
 
             List<Post> allUserPosts = user.getPosts();
             allUserPosts.remove(postToDelete);
@@ -120,8 +134,11 @@ public class PostController {
             postService.deletePost(postToDelete);
             uploadService.deleteUpload(upload);
 
-            File postToDeleteFromHdd = new File(postToDelete.getUploadFile().getFileName());
+            File postToDeleteFromHdd = new File(System.getProperty("user.dir") + postToDelete.getUploadFile().getFileName());
             postToDeleteFromHdd.delete();
+
+            File postToDeleteFromHddHq = new File(postToDelete.getUploadFile().getHqFileName());
+            postToDeleteFromHddHq.delete();
 
             return "redirect:/";
         }
@@ -130,13 +147,15 @@ public class PostController {
 
     }
 
+    // SECURED
     @PostMapping("/edit")
     @ResponseBody
     public PostEditDto editPost(@ModelAttribute PostEditDto postEditDto){
 
         Post postToEdit = postService.getPostById(postEditDto.getId());
 
-        if (sessionService.getLoggedUser() == postToEdit.getUser()){
+        if (sessionService.getLoggedUser() == postToEdit.getUser() ||
+                sessionService.isLoggedUserAdmin()){
             postToEdit.setDescription(postEditDto.getDesc());
             postToEdit.setId(postToEdit.getId());
             postToEdit.setDate(postToEdit.getDate());
@@ -145,6 +164,8 @@ public class PostController {
             postToEdit.setUser(postToEdit.getUser());
 
             postService.savePost(postToEdit);
+
+            System.out.println("Post Saved");
 
             return postEditDto;
         }
@@ -187,7 +208,6 @@ public class PostController {
 
         Post post = postService.getPostById(newPostDto.getPostId());
 
-
         Comment comment = new Comment();
         comment.setComment(newPostDto.getCommentBody());
         comment.setUser(sessionService.getLoggedUser());
@@ -210,6 +230,54 @@ public class PostController {
 
         model.addAttribute("comments", comments);
         return "/fragments/comments";
+    }
+
+    // SECURED
+    @PostMapping("/editComment")
+    @ResponseBody
+    public HashMap<String, String> editComment(@RequestParam("id") int id,
+                                               @RequestParam("comment") String comment){
+
+
+        Comment commentToEdit = commentService.getCommentById(id);
+
+        if(commentToEdit.getUser() == sessionService.getLoggedUser() ||
+                sessionService.getLoggedUser().getRoles().iterator().next().getName().equals("ROLE_ADMIN")){
+
+            commentToEdit.setComment(comment);
+            commentService.saveComment(commentToEdit);
+
+            HashMap<String, String> answer = new HashMap<>();
+            answer.put("status", "success");
+            answer.put("comment", comment);
+            return answer;
+
+
+        } else {
+
+            HashMap<String, String> answer = new HashMap<>();
+            answer.put("status", "forbidden");
+            answer.put("comment", comment);
+            return answer;
+
+        }
+
+    }
+
+    @PostMapping("/deleteComment")
+    @ResponseBody
+    public String deleteComment(@RequestParam("comment-id") int commentId,
+                                @RequestParam("post-id") int postId){
+
+        Post post = postService.getPostById(postId);
+        if(post.getUser() == sessionService.getLoggedUser() || sessionService.isLoggedUserAdmin()){
+            postService.deleteCommentFromPost(post, commentService.getCommentById(commentId));
+            commentService.deleteComment(commentId);
+            return "success";
+        }
+
+        return "forbidden";
+
     }
 
 }

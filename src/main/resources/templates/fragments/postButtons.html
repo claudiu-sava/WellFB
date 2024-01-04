@@ -13,12 +13,12 @@
       <img th:unless="${post.getLikedBy().contains(loggedUser)}" th:src="@{/drawable/like_icon_50.png}" th:post-id="${post.getId().toString()}" alt="like" th:id="'likeImage_' + ${post.getId().toString()}">
     </button>
 
-    <button type="button" th:id="'editButton_' + ${post.getId().toString()}" class="btn btn-link" data-toggle="modal" th:post-id="${post.getId()}" th:post-desc="${post.getDescription()}" data-target="#postEditModal">
-      <img th:if="${post.getUser().getUsername().equals(loggedUser.getUsername())}" th:src="@{/drawable/edit_icon_50.png}" alt="edit">
+    <button th:if="${post.getUser().getUsername().equals(loggedUser.getUsername())}" type="button" th:id="'editButton_' + ${post.getId().toString()}" class="btn btn-link" data-toggle="modal" th:post-id="${post.getId()}" th:post-desc="${post.getDescription()}" data-target="#postEditModal">
+      <img th:src="@{/drawable/edit_icon_50.png}" alt="edit">
     </button>
 
-    <button type="button" th:id="'deleteButton_' + ${post.getId().toString()}" class="btn btn-link" data-toggle="modal" th:post-id="${post.getId()}" data-target="#postDeleteModal">
-      <img th:if="${post.getUser().getUsername().equals(loggedUser.getUsername())}" th:src="@{/drawable/remove_icon_50.png}" alt="remove post">
+    <button th:if="${post.getUser().getUsername().equals(loggedUser.getUsername())}" type="button" th:id="'deleteButton_' + ${post.getId().toString()}" class="btn btn-link" data-toggle="modal" th:post-id="${post.getId()}" data-target="#postDeleteModal">
+      <img th:src="@{/drawable/remove_icon_50.png}" alt="remove post">
     </button>
 
   </div>

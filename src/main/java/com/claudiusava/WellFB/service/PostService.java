@@ -60,4 +60,14 @@ public class PostService {
         return post;
 
     }
+
+    public void deleteCommentFromPost(Post post, Comment comment){
+
+            List<Comment> commentList = post.getComments();
+            commentList.remove(comment);
+            post.setComments(commentList);
+
+            postRepository.save(post);
+
+    }
 }

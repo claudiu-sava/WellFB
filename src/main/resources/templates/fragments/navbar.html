@@ -13,8 +13,10 @@
 
         <form class="form-inline" method="get" th:action="@{/users/search}">
 
+            <a th:if="${loggeduser != null}" th:href="@{/admin/}">
+                <button th:if="${loggeduser.getRoles().iterator().next().getName().equals('ROLE_ADMIN')}" type="button" class="btn btn-outline-primary mr-3">Admin</button>
+            </a>
             <button th:if="${loggeduser != null}" type="button" data-toggle="modal" data-target="#newPostModal" class="btn btn-outline-primary mr-3">New Post</button>
-
 
             <input class="form-control mr-sm-2" type="search" name="username" placeholder="Search for User" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:replace="~{/fragments/navbar :: header(${loggedUser})}"></div>
+<div th:replace="~{/fragments/head :: head}"></div>
+
+<div class="container-fluid">
+  <div class="row text-center mb-1">
+    <div class="col-md-4 mt-5">
+      <!-- Left column content -->
+
+      <div style="height: 300px">
+        <h3>Total Users / Online Users</h3>
+        <canvas id="allUsersPie"></canvas>
+      </div>
+
+
+    </div>
+    <div class="col-md-4 mt-5">
+      <!-- Center column content -->
+
+      <div style="height: 300px">
+        <h3>Users / Admins</h3>
+        <canvas id="adminCounterPie"></canvas>
+      </div>
+
+
+    </div>
+    <div class="col-md-4 mt-5">
+      <!-- Right column content -->
+
+      <div style="height: 300px">
+        <h3>Users Creation Frequency</h3>
+        <canvas id="usersCreationFrequency"></canvas>
+      </div>
+
+
+    </div>
+  </div>
+
+
+  <div class="row text-center">
+    <div class="col-md-12 mt-5">
+
+      <h3>Users</h3>
+
+      <div th:insert="~{/fragments/usersTableForAdmin :: usersTable(${allUsersNonAdmin})}"></div>
+    </div>
+  </div>
+
+    <div class="row text-center">
+      <div class="col-md-12 mt-5">
+
+        <h3>Admins</h3>
+
+        <div th:insert="~{/fragments/usersTableForAdmin :: usersTable(${allUsersAdmin})}"></div>
+      </div>
+  </div>
+
+  <script th:src="@{/js/userRelatedCharts.js}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</div>
+</body>
+</html>

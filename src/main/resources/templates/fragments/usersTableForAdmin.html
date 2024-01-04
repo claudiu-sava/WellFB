@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:replace="~{/fragments/navbar :: header(${loggedUser})}"></div>
+<div th:replace="~{/fragments/head :: head}"></div>
+
+<table th:fragment="usersTable(users)" class="table">
+  <thead>
+  <tr>
+    <th scope="col">Avatar</th>
+    <th scope="col">Username</th>
+    <th scope="col">Total Posts</th>
+    <th scope="col">Follows</th>
+    <th scope="col">Followed</th>
+    <th scope="col">Creation Date</th>
+    <th scope="col">ID</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="user : ${users}">
+    <td><a th:href="@{'/users/?username=' + ${user.getUsername()}}"><img th:src="@{${user.getAvatar().getFileName()}}" class="profile-pic-icon"></a></td>
+    <td><span th:text="${user.getUsername()}"></span></td>
+    <td><span th:text="${user.getPosts().size()}"></span></td>
+    <td><span th:text="${user.getFollows().size()}"></span></td>
+    <td><span th:text="${user.getFollowedBy().size()}"></span></td>
+    <td><span th:text="${user.getCreationDate()}"></span></td>
+    <td><span th:text="${user.getId()}"></span></td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

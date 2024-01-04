@@ -19,7 +19,7 @@
 
                         <div th:insert="~{/fragments/usernameAndAvatarPost :: usernameAndAvatar(${post})}"></div>
 
-                        <img th:src="@{${post.getUploadFile().getFileName()}}" alt="image" class="img-fluid vh-100 lazyload" loading="lazy" th:post-id="${post.getId().toString()}" data-toggle="modal" data-target="#postModal">
+                        <img th:src="@{${post.getUploadFile().getFileName()}}" alt="image" class="img-fluid lazyload" loading="lazy" th:post-id="${post.getId().toString()}" data-toggle="modal" data-target="#postModal">
                         <h5 th:id="'postDesc_' + ${post.getId().toString()}" class="text-break my-2" th:text="${post.getDescription()}"></h5>
 
                         <div th:insert="~{/fragments/postButtons :: postButtons}"></div>

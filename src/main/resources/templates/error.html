@@ -10,13 +10,17 @@
 </div>
 
 <div th:if="${param.somethingWentWrong}" class="h-100 d-flex justify-content-center">
-    <img th:src="@{/drawable/somethingWentWrong_illustration.png}" alt="user" >
+    <img th:src="@{/drawable/somethingWentWrong_illustration.svg}" alt="user" style="max-height: 500px;">
     <h2>Something went wrong...</h2>
 </div>
 
 <div th:if="${param.error404}" class="h-100 d-flex justify-content-center">
-    <img th:src="@{/drawable/404_illustration.png}" alt="user" >
-    <h2>This page doesnt exist</h2>
+    <img th:src="@{/drawable/404_illustration.svg}" alt="user" style="max-height: 500px;">
+    <h2>This page doesn't exist</h2>
+</div>
+<div th:if="${param.forbidden}" class="h-100 d-flex justify-content-center">
+    <img th:src="@{/drawable/forbidden_illustration.svg}" alt="user" style="max-height: 500px;">
+    <h2>Looks like you have no access to this page</h2>
 </div>
 
 

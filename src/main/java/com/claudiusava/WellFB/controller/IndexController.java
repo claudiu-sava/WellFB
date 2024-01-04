@@ -41,9 +41,11 @@ public class IndexController {
 
         List<User> usersToShow = new ArrayList<>();
 
-        for (int i = 0; i <= 9; i++){
-            if (!allUsersList.get(i).equals(loggedUser)){
-                usersToShow.add(allUsersList.get(i));
+        if(allUsersList.size() >= 9){
+            for (int i = 0; i <= 9; i++){
+                if (!allUsersList.get(i).equals(loggedUser)){
+                    usersToShow.add(allUsersList.get(i));
+                }
             }
         }
 

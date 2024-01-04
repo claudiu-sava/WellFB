@@ -22,6 +22,8 @@ public class CustomErrorController implements org.springframework.boot.web.servl
             }
             else if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
                 return "redirect:/error?somethingWentWrong";
+            } else if(statusCode == HttpStatus.FORBIDDEN.value()){
+                return "redirect:/error?forbidden";
             }
         }
         return "error";

@@ -15,6 +15,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfiguration{
 
+    private static final String[] admin_auth = {
+            "/admin/**"
+    };
+
     private static final String[] user_auth = {
             "/",
             "/post/**",
@@ -34,6 +38,7 @@ public class SecurityConfiguration{
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
+                        .requestMatchers(admin_auth).hasRole("ADMIN")
                         .requestMatchers(user_auth).hasAnyRole("USER", "ADMIN")
                         .requestMatchers(anon_auth).permitAll()
                 .anyRequest().authenticated())

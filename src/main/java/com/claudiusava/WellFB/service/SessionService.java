@@ -18,5 +18,17 @@ public class SessionService {
         return userRepository.findByUsername(getLoggedUsername()).get();
     }
 
+    public boolean isLoggedUserAdmin(){
+
+        User user = getLoggedUser();
+        if (user.getRoles().iterator().next().getName().equals("ROLE_ADMIN")){
+
+            return true;
+
+        }
+
+        return false;
+
+    }
 
 }
