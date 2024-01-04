@@ -4,43 +4,40 @@
 <div th:replace="~{/fragments/navbar :: header(${loggedUser})}"></div>
 <div th:replace="~{/fragments/head :: head}"></div>
 
-<div class="container-fluid">
-    <div th:each="post: ${allPosts}" class="row text-center mb-1">
-        <div class="col-md-5 mt-5">
-
-            <a th:href="@{'/users/?username=' + ${post}}"><img th:src="@{${post.getUploadFile().getFileName()}}" style="width: 250px; height: 200px;"></a>
-
+<div th:each="post: ${allPosts}" class="accordion">
+    <input type="radio" name="select" class="accordion-select"/>
+    <div class="accordion-title">
+        <div class="d-flex align-items-center" role="group">
+            <a th:href="@{'/users/?username=' + ${post.getUser().getUsername()}}"><img th:src="@{${post.getUploadFile().getFileName()}}" style="width: 350px; height: 250px;"></a>
+            <div class="mx-3" th:insert="~{/fragments/usernameAndAvatarPost :: usernameAndAvatar(${post})}"></div>
+            <h3 class="mx-3" th:text="'Comments: ' + ${post.getComments().size()}"></h3>
         </div>
-        <div class="col-md-5 mt-5">
-
-            <div th:if="${post.getComments().isEmpty()}">
-                <p>No comments yet</p>
+    </div>
+    <div class="accordion-content">
+        <div th:if="${post.getComments().isEmpty()}">
+            <h3>This post has no comments</h3>
+        </div>
+        <div th:unless="${post.getComments().isEmpty()}" th:each="comment : ${post.getComments()}">
+            <div class="d-flex align-items-center" role="group">
+                <img alt="user" th:src="@{${comment.getUser().getAvatar().getFileName()}}" class="profile-pic-icon-tiny">
+                <h4 class="my-3 ml-3 username" th:text="${comment.getUser().getUsername()}"></h4>
             </div>
 
-            <div th:unless="${post.getComments().isEmpty()}" th:each="comment : ${post.getComments()}">
+            <p th:id="'comment_' + ${comment.getId()}" th:text="${comment.getComment()}"></p>
 
-                <div class="d-flex justify-content-center align-items-center" role="group">
-                    <img alt="user" th:src="@{${comment.getUser().getAvatar().getFileName()}}" class="profile-pic-icon-tiny">
-                    <h4 class="my-3 ml-3 username" th:text="${comment.getUser().getUsername()}"></h4>
-                </div>
+            <div class="d-flex align-items-center" role="group">
 
-                <p th:id="'comment_' + ${comment.getId()}" th:text="${comment.getComment()}"></p>
-                <div class="d-flex justify-content-center align-items-center" role="group">
-                    <button type="button" th:id="'editCommentButton_' + ${comment.getId().toString()}" class="btn btn-link" data-toggle="modal" th:comment-id="${comment.getId()}" th:comment="${comment.getComment()}" data-target="#commentEditModal">
-                        <img th:src="@{/drawable/edit_icon_50.png}"  style="height: 25px; width: 25px;">
-                    </button>
+                <button type="button" th:id="'editCommentButton_' + ${comment.getId().toString()}" class="btn btn-link" data-toggle="modal" th:comment-id="${comment.getId()}" th:comment="${comment.getComment()}" data-target="#commentEditModal">
+                    <img th:src="@{/drawable/edit_icon_50.png}"  style="height: 25px; width: 25px;">
+                </button>
 
-                    <button type="button" th:id="'deleteCommentButton_' + ${comment.getId().toString()}" class="btn btn-link" data-toggle="modal" th:comment-id="${comment.getId()}" th:post-id="${post.getId()}" data-target="#commentDeleteModal">
-                        <img th:src="@{/drawable/remove_icon_50.png}" th:comm-id="${comment.getId()}" style="height: 25px; width: 25px;">
-                    </button>
-                </div>
-
-
+                <button type="button" th:id="'deleteCommentButton_' + ${comment.getId().toString()}" class="btn btn-link" data-toggle="modal" th:comment-id="${comment.getId()}" th:post-id="${post.getId()}" data-target="#commentDeleteModal">
+                    <img th:src="@{/drawable/remove_icon_50.png}" th:comm-id="${comment.getId()}" style="height: 25px; width: 25px;">
+                </button>
             </div>
         </div>
     </div>
 </div>
-
 <div th:insert="~{/fragments/commentDeleteModal :: modal}"></div>
 <div th:insert="~{/fragments/commentEditModal :: modal}"></div>
 </body>
