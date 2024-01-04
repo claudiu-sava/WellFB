@@ -23,7 +23,7 @@
         <div class="carousel-inner">
 
             <div th:each="post, iterStat : ${allPostsByUser}" style="width:100%;" th:class="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                <img th:src="@{${post.getUploadFile().getFileName()}}" alt="Image" class="img-fluid lazyload" th:post-id="${post.getId().toString()}" data-toggle="modal" data-target="#postModal">
+                <img th:src="@{${post.getUploadFile().getFileName()}}" alt="Image" class="img-fluid vh-100 lazyload" th:post-id="${post.getId().toString()}" data-toggle="modal" data-target="#postModal">
                 <div class="carousel-caption d-none d-md-block">
 
                     <h5 th:id="'postDesc_' + ${post.getId().toString()}" th:text="${post.getDescription()}"></h5>
